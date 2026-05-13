@@ -1,0 +1,34 @@
+<div class="table-wrapper">
+  <table *ngIf="parcelas.length > 0">
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Ubicación</th>
+        <th>Área (ha)</th>
+        <th>Estado</th>
+        <th>Humedad</th>
+        <th>Temperatura</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let parcela of parcelas">
+        <td>{{ parcela.nombre }}</td>
+        <td>{{ parcela.ubicacion }}</td>
+        <td>{{ parcela.area | number : '1.1-2' }}</td>
+        <td>
+          <span class="badge" [class.risk]="parcela.estado === 'EN_RIESGO'" [class.inactive]="parcela.estado === 'INACTIVO'">
+            {{ getEstadoLabel(parcela.estado) }}
+          </span>
+        </td>
+        <td>{{ parcela.humedad ?? '-' }}</td>
+        <td>{{ parcela.temperatura ?? '-' }}</td>
+        <td>
+          <button type="button" (click)="deleteParcela.emit(parcela.id)">Eliminar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p class="empty" *ngIf="parcelas.length === 0">No hay parcelas registradas para este filtro.</p>
+</div>

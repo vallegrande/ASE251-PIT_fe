@@ -1,0 +1,27 @@
+<section class="grid" *ngIf="summary">
+  <app-stat-card label="Total de parcelas" [value]="summary.totalParcelas"></app-stat-card>
+  <app-stat-card
+    label="Parcelas activas"
+    [value]="summary.parcelasActivas"
+    tone="success"
+  ></app-stat-card>
+  <app-stat-card
+    label="Parcelas en riesgo"
+    [value]="summary.parcelasEnRiesgo"
+    tone="danger"
+  ></app-stat-card>
+  <app-stat-card
+    label="Área activa (ha)"
+    [value]="(summary.areaTotalHectareas | number : '1.0-2') || '-'"
+  ></app-stat-card>
+  <app-stat-card
+    label="Alertas pendientes"
+    [value]="summary.alertasPendientes"
+    tone="danger"
+  ></app-stat-card>
+  <app-stat-card
+    label="Alertas críticas"
+    [value]="summary.alertasCriticas"
+    tone="danger"
+  ></app-stat-card>
+</section>

@@ -1,0 +1,16 @@
+<div class="list">
+  <article class="item" *ngFor="let alerta of alertas">
+    <div>
+      <p class="title">{{ alerta.tipo }} - {{ nivelLabel(alerta.nivel) }}</p>
+      <p class="meta">Parcela: {{ alerta.parcelaNombre }} | Estado: {{ alerta.estado }}</p>
+      <p class="desc">{{ alerta.descripcion }}</p>
+    </div>
+
+    <div class="actions" *ngIf="alerta.estado === 'PENDIENTE'">
+      <button type="button" class="ok" (click)="atender.emit(alerta.id)">Atender</button>
+      <button type="button" class="discard" (click)="descartar.emit(alerta.id)">Descartar</button>
+    </div>
+  </article>
+
+  <p *ngIf="alertas.length === 0" class="empty">No hay alertas para este filtro.</p>
+</div>

@@ -1,0 +1,73 @@
+<section>
+  <h2>Gestión de Parcelas</h2>
+
+  <form class="panel filters" (ngSubmit)="load()">
+    <label>
+      Nombre
+      <input type="text" [(ngModel)]="nombreFiltro" name="nombreFiltro" />
+    </label>
+
+    <label>
+      Estado
+      <select [(ngModel)]="estadoFiltro" name="estadoFiltro">
+        <option value="">Todos</option>
+        <option *ngFor="let estado of estados" [value]="estado.value">{{ estado.label }}</option>
+      </select>
+    </label>
+
+    <button type="submit">Filtrar</button>
+  </form>
+
+  <form class="panel create-form" (ngSubmit)="create()">
+    <h3>Nueva parcela</h3>
+
+    <label>
+      Nombre
+      <input type="text" [(ngModel)]="model.nombre" name="nombre" required />
+    </label>
+
+    <label>
+      Área (ha)
+      <input type="number" min="0.01" step="0.01" [(ngModel)]="model.area" name="area" required />
+    </label>
+
+    <label>
+      Ubicación
+      <input type="text" [(ngModel)]="model.ubicacion" name="ubicacion" required />
+    </label>
+
+    <label>
+      Estado
+      <select [(ngModel)]="model.estado" name="estado" required>
+        <option *ngFor="let estado of estados" [value]="estado.value">{{ estado.label }}</option>
+      </select>
+    </label>
+
+    <label>
+      Humedad
+      <input type="number" step="0.01" [(ngModel)]="model.humedad" name="humedad" />
+    </label>
+
+    <label>
+      Temperatura
+      <input type="number" step="0.01" [(ngModel)]="model.temperatura" name="temperatura" />
+    </label>
+
+    <label>
+      Fecha de siembra
+      <input type="date" [(ngModel)]="model.fechaSiembra" name="fechaSiembra" />
+    </label>
+
+    <label>
+      Fecha estimada de cosecha
+      <input type="date" [(ngModel)]="model.fechaCosechaEstimada" name="fechaCosechaEstimada" />
+    </label>
+
+    <button type="submit">Guardar parcela</button>
+  </form>
+
+  <p class="status" *ngIf="loading">Cargando parcelas...</p>
+  <p class="status error" *ngIf="error">{{ error }}</p>
+
+  <app-parcela-table [parcelas]="parcelas" (deleteParcela)="delete($event)"></app-parcela-table>
+</section>

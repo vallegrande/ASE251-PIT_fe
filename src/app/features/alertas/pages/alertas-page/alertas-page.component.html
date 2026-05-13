@@ -1,0 +1,57 @@
+<section>
+  <h2>Gestión de Alertas</h2>
+
+  <form class="panel filters" (ngSubmit)="load()">
+    <label>
+      Estado
+      <select [(ngModel)]="estadoFiltro" name="estadoFiltro">
+        <option value="">Todos</option>
+        <option *ngFor="let estado of estados" [value]="estado">{{ estado }}</option>
+      </select>
+    </label>
+    <button type="submit">Filtrar</button>
+  </form>
+
+  <form class="panel create-form" (ngSubmit)="create()">
+    <h3>Nueva alerta</h3>
+
+    <label>
+      Parcela
+      <select [(ngModel)]="model.parcelaId" name="parcelaId" required>
+        <option *ngFor="let parcela of parcelas" [ngValue]="parcela.id">
+          {{ parcela.nombre }}
+        </option>
+      </select>
+    </label>
+
+    <label>
+      Tipo
+      <select [(ngModel)]="model.tipo" name="tipo" required>
+        <option *ngFor="let tipo of tipos" [value]="tipo">{{ tipo }}</option>
+      </select>
+    </label>
+
+    <label>
+      Nivel
+      <select [(ngModel)]="model.nivel" name="nivel" required>
+        <option *ngFor="let nivel of niveles" [value]="nivel">{{ nivel }}</option>
+      </select>
+    </label>
+
+    <label class="full">
+      Descripción
+      <textarea [(ngModel)]="model.descripcion" name="descripcion" rows="3" required></textarea>
+    </label>
+
+    <button type="submit">Guardar alerta</button>
+  </form>
+
+  <p class="status" *ngIf="loading">Cargando alertas...</p>
+  <p class="status error" *ngIf="error">{{ error }}</p>
+
+  <app-alerta-list
+    [alertas]="alertas"
+    (atender)="atender($event)"
+    (descartar)="descartar($event)"
+  ></app-alerta-list>
+</section>

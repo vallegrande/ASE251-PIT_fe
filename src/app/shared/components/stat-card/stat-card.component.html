@@ -1,0 +1,5 @@
+<article class="card" [class.tone-danger]="tone === 'danger'" [class.tone-success]="tone === 'success'">
+  <p class="label">{{ label }}</p>
+  <h3 class="value">{{ value }}</h3>
+  <p class="hint" *ngIf="hint">{{ hint }}</p>
+</article>

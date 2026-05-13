@@ -1,0 +1,56 @@
+.table-wrapper {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #ffffff;
+  border: 1px solid #d9dfdc;
+  border-radius: 4px;
+  overflow: hidden;
+  font-size: 0.83rem;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 0.48rem 0.58rem;
+  border-bottom: 1px solid #e3e7e5;
+}
+
+th {
+  color: #f6faf8;
+  background: #1f6b4f;
+  font-weight: 600;
+}
+
+button {
+  border-color: #c83d3d;
+  background: #dc4c4c;
+  padding: 0.28rem 0.5rem;
+  font-size: 0.75rem;
+}
+
+.badge {
+  display: inline-block;
+  border-radius: 999px;
+  padding: 0.2rem 0.55rem;
+  background: #e8f5ef;
+  color: #25684e;
+  font-size: 0.74rem;
+}
+
+.badge.risk {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.badge.inactive {
+  background: #e2e8f0;
+  color: #334155;
+}
+
+.empty {
+  color: #64748b;
+}

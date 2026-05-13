@@ -1,0 +1,11 @@
+<section class="page">
+  <div class="page-title">
+    <h2>Dashboard general</h2>
+    <button type="button" (click)="loadSummary()">Actualizar</button>
+  </div>
+
+  <p class="status" *ngIf="loading">Cargando métricas...</p>
+  <p class="status error" *ngIf="error">{{ error }}</p>
+
+  <app-dashboard-metrics *ngIf="!loading && !error" [summary]="summary"></app-dashboard-metrics>
+</section>
