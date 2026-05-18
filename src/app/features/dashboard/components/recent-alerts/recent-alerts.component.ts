@@ -12,7 +12,7 @@ export class RecentAlertsComponent {
 
   get recentAlertas(): Alerta[] {
     return [...this.alertas]
-      .sort((a, b) => new Date(b.fechaAlerta).getTime() - new Date(a.fechaAlerta).getTime())
+      .sort((a, b) => new Date(b.fecha ?? '').getTime() - new Date(a.fecha ?? '').getTime())
       .slice(0, 5);
   }
 
@@ -34,7 +34,7 @@ export class RecentAlertsComponent {
     }
   }
 
-  formatDate(fecha: string | null): string {
+  formatDate(fecha: string | null | undefined): string {
     if (!fecha) return '-';
     return new Date(fecha).toLocaleDateString('es-PE', { day: '2-digit', month: 'short', year: 'numeric' });
   }

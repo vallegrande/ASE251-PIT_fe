@@ -45,23 +45,18 @@
       </label>
 
       <label>
-        Humedad (%)
-        <input type="number" min="0" max="100" step="0.1" [(ngModel)]="model.humedad" name="humedad" placeholder="Ej: 60.5" />
+        Tipo de Suelo
+        <input type="text" [(ngModel)]="model.tipoSuelo" name="tipoSuelo" placeholder="Ej: Franco arenoso" />
       </label>
 
       <label>
-        Temperatura (°C)
-        <input type="number" step="0.1" [(ngModel)]="model.temperatura" name="temperatura" placeholder="Ej: 25.0" />
+        Cultivo
+        <input type="text" [(ngModel)]="model.cultivo" name="cultivo" placeholder="Ej: Camote" />
       </label>
 
-      <label>
-        Fecha de Siembra
-        <input type="date" [(ngModel)]="model.fechaSiembra" name="fechaSiembra" />
-      </label>
-
-      <label>
-        Fecha Cosecha Estimada
-        <input type="date" [(ngModel)]="model.fechaCosechaEstimada" name="fechaCosechaEstimada" />
+      <label class="full-width">
+        Descripción
+        <textarea [(ngModel)]="model.descripcion" name="descripcion" rows="2" placeholder="Detalles adicionales de la parcela"></textarea>
       </label>
 
       <div class="form-actions full-width">

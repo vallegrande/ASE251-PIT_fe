@@ -34,7 +34,7 @@
         <div class="user-avatar">{{ getInitials() }}</div>
         <div class="user-info">
           <span class="user-name">{{ currentUser.nombreCompleto }}</span>
-          <span class="user-role">{{ currentUser.rol }}</span>
+          <span class="user-role">{{ currentUser.rol || 'SIN_ROL' }}</span>
         </div>
       </div>
       <button class="logout-btn" (click)="logout()" title="Cerrar sesión">

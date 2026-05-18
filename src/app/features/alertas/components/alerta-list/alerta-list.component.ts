@@ -30,7 +30,7 @@ export class AlertaListComponent {
     }
   }
 
-  formatDate(fecha: string | null): string {
+  formatDate(fecha: string | null | undefined): string {
     if (!fecha) return '-';
     return new Date(fecha).toLocaleDateString('es-PE', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
   }

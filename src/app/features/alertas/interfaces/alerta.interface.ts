@@ -1,22 +1,23 @@
-export type TipoAlerta = 'PLAGA' | 'SEQUIA' | 'LLUVIA_INTENSA' | 'TEMPERATURA' | 'OTRO';
-export type NivelAlerta = 'BAJA' | 'MEDIA' | 'ALTA' | 'CRITICA';
+import { Parcela } from '../../parcelas/interfaces/parcela.interface';
+
+export type TipoAlerta = 'PLAGA' | 'SEQUIA' | 'LLUVIA_INTENSA' | 'CALOR_EXCESIVO' | 'HUMEDAD_BAJA' | 'ENFERMEDAD' | 'OTRO';
+export type NivelRiesgo = 'BAJA' | 'MEDIA' | 'ALTA' | 'CRITICA';
 export type EstadoAlerta = 'PENDIENTE' | 'ATENDIDA' | 'DESCARTADA';
 
 export interface Alerta {
-  id: number;
-  parcelaId: number;
-  parcelaNombre: string;
+  id?: number;
   tipo: TipoAlerta;
-  nivel: NivelAlerta;
-  descripcion: string;
+  mensaje: string; // ANTES: descripcion
+  nivelRiesgo: NivelRiesgo; // ANTES: nivel
+  fecha?: string; // ANTES: fecha_alerta
   estado: EstadoAlerta;
-  fechaAlerta: string;
-  fechaAtencion: string | null;
+  parcela: Parcela;
 }
 
 export interface AlertaRequest {
-  parcelaId: number;
+  parcela: { id: number };
   tipo: TipoAlerta;
-  nivel: NivelAlerta;
-  descripcion: string;
+  nivelRiesgo: NivelRiesgo;
+  mensaje: string;
 }
+

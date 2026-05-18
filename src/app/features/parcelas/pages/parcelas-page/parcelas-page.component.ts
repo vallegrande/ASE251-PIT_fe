@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Parcela, ParcelaRequest } from '../../interfaces/parcela.interface';
 import { ParcelasService } from '../../services/parcelas.service';
 import Swal from 'sweetalert2';
+import { HttpErrorService } from '../../../../core/services/http-error.service';
 
 @Component({
   selector: 'app-parcelas-page',
@@ -18,14 +19,17 @@ export class ParcelasPageComponent implements OnInit {
   editingId: number | null = null;
 
   readonly estados = [
-    { value: 'ACTIVO', label: 'Activo' },
-    { value: 'EN_RIESGO', label: 'En riesgo' },
-    { value: 'INACTIVO', label: 'Inactivo' }
+    { value: 'ACTIVA', label: 'Activa' },
+    { value: 'INACTIVA', label: 'Inactiva' },
+    { value: 'BAJO_MANTENIMIENTO', label: 'Bajo mantenimiento' }
   ];
 
   model: ParcelaRequest = this.emptyModel();
 
-  constructor(private readonly parcelasService: ParcelasService) {}
+  constructor(
+    private readonly parcelasService: ParcelasService,
+    private readonly httpErrorService: HttpErrorService
+  ) {}
 
   ngOnInit(): void {
     this.load();
@@ -39,8 +43,8 @@ export class ParcelasPageComponent implements OnInit {
         this.parcelas = response;
         this.loading = false;
       },
-      error: () => {
-        this.error = 'No se pudo cargar la lista de parcelas.';
+      error: (err) => {
+        this.error = this.httpErrorService.toMessage(err, 'No se pudo cargar la lista de parcelas.');
         this.loading = false;
       }
     });
@@ -57,8 +61,8 @@ export class ParcelasPageComponent implements OnInit {
         this.parcelas = response;
         this.loading = false;
       },
-      error: () => {
-        this.error = 'Error al buscar parcelas.';
+      error: (err) => {
+        this.error = this.httpErrorService.toMessage(err, 'Error al buscar parcelas.');
         this.loading = false;
       }
     });
@@ -71,16 +75,16 @@ export class ParcelasPageComponent implements OnInit {
   }
 
   openEdit(parcela: Parcela): void {
-    this.editingId = parcela.id;
+    this.editingId = parcela.id ?? null;
     this.model = {
       nombre: parcela.nombre,
       area: parcela.area,
       ubicacion: parcela.ubicacion,
+      tipoSuelo: parcela.tipoSuelo ?? null,
+      cultivo: parcela.cultivo ?? null,
+      descripcion: parcela.descripcion ?? null,
       estado: parcela.estado,
-      humedad: parcela.humedad,
-      temperatura: parcela.temperatura,
-      fechaSiembra: parcela.fechaSiembra,
-      fechaCosechaEstimada: parcela.fechaCosechaEstimada
+      usuario: (parcela.usuario && parcela.usuario.id) ? { id: parcela.usuario.id } : null
     };
     this.showForm = true;
   }
@@ -102,8 +106,8 @@ export class ParcelasPageComponent implements OnInit {
         this.model = this.emptyModel();
         this.load();
       },
-      error: () => {
-        Swal.fire({ icon: 'error', title: 'Error', text: 'No se pudo guardar la parcela. Verifica los datos.', confirmButtonColor: '#059669' });
+      error: (err) => {
+        Swal.fire({ icon: 'error', title: 'Error', text: this.httpErrorService.toMessage(err, 'No se pudo guardar la parcela.'), confirmButtonColor: '#059669' });
       }
     });
   }
@@ -125,8 +129,8 @@ export class ParcelasPageComponent implements OnInit {
             Swal.fire({ icon: 'success', title: 'Parcela eliminada', timer: 1500, showConfirmButton: false });
             this.load();
           },
-          error: () => {
-            Swal.fire({ icon: 'error', title: 'Error', text: 'No se pudo eliminar la parcela.', confirmButtonColor: '#059669' });
+          error: (err) => {
+            Swal.fire({ icon: 'error', title: 'Error', text: this.httpErrorService.toMessage(err, 'No se pudo eliminar la parcela.'), confirmButtonColor: '#059669' });
           }
         });
       }
@@ -144,11 +148,11 @@ export class ParcelasPageComponent implements OnInit {
       nombre: '',
       area: 0,
       ubicacion: '',
-      estado: 'ACTIVO',
-      humedad: null,
-      temperatura: null,
-      fechaSiembra: null,
-      fechaCosechaEstimada: null
+      tipoSuelo: null,
+      cultivo: null,
+      descripcion: null,
+      estado: 'ACTIVA',
+      usuario: null
     };
   }
 }

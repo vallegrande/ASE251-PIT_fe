@@ -9,10 +9,10 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root'
 })
 export class ApiService {
-  private readonly apiBase = environment.apiUrl;
+  private readonly apiBase = environment.apiUrl.replace(/\/+$/, '');
 
   /** Construye la URL completa para un recurso */
   endpoint(resource: string): string {
-    return `${this.apiBase}/${resource}`;
+    return `${this.apiBase}/${resource.replace(/^\/+/, '')}`;
   }
 }

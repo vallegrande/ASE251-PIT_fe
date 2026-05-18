@@ -1,30 +1,30 @@
 <div class="alert-list">
-  <article class="alert-card" *ngFor="let alerta of alertas" [ngClass]="getNivelClass(alerta.nivel)">
+  <article class="alert-card" *ngFor="let alerta of alertas" [ngClass]="getNivelClass(alerta.nivelRiesgo)">
     <div class="alert-header">
       <div class="alert-tipo">
         <i class="bi bi-exclamation-diamond-fill"></i>
         <span>{{ alerta.tipo }}</span>
       </div>
-      <span class="badge" [ngClass]="getNivelClass(alerta.nivel) + '-badge'">
-        {{ getNivelLabel(alerta.nivel) }}
+      <span class="badge" [ngClass]="getNivelClass(alerta.nivelRiesgo) + '-badge'">
+        {{ getNivelLabel(alerta.nivelRiesgo) }}
       </span>
     </div>
 
-    <p class="alert-message">{{ alerta.descripcion }}</p>
+    <p class="alert-message">{{ alerta.mensaje }}</p>
 
     <div class="alert-meta">
-      <span><i class="bi bi-geo-alt"></i> {{ alerta.parcelaNombre || '-' }}</span>
-      <span><i class="bi bi-clock"></i> {{ formatDate(alerta.fechaAlerta) }}</span>
+      <span><i class="bi bi-geo-alt"></i> {{ alerta.parcela.nombre || '-' }}</span>
+      <span><i class="bi bi-clock"></i> {{ formatDate(alerta.fecha) }}</span>
       <span class="badge" [ngClass]="alerta.estado === 'PENDIENTE' ? 'badge-warning' : alerta.estado === 'ATENDIDA' ? 'badge-success' : 'badge-neutral'">
         {{ alerta.estado }}
       </span>
     </div>
 
     <div class="alert-actions" *ngIf="alerta.estado === 'PENDIENTE'">
-      <button class="btn-primary btn-sm" (click)="atender.emit(alerta.id)">
+      <button class="btn-primary btn-sm" (click)="atender.emit(alerta.id!)">
         <i class="bi bi-check-lg"></i> Atender
       </button>
-      <button class="btn-danger btn-sm" (click)="descartar.emit(alerta.id)">
+      <button class="btn-danger btn-sm" (click)="descartar.emit(alerta.id!)">
         <i class="bi bi-x-lg"></i> Descartar
       </button>
     </div>

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../../core/services/auth.service';
 import Swal from 'sweetalert2';
+import { RegisterRequest } from '../../interfaces/auth.interface';
 
 @Component({
   selector: 'app-register-page',
@@ -10,31 +11,19 @@ import Swal from 'sweetalert2';
   standalone: false
 })
 export class RegisterPageComponent {
-  model = {
+  model: RegisterRequest = {
     nombreCompleto: '',
-    correo: '',
     username: '',
+    email: '',
     password: '',
     confirmPassword: '',
-    rol: 'ENCARGADO',
-    area: 'CAMPO'
+    telefono: '',
+    direccion: '',
+    areaTrabajo: ''
   };
 
   loading = false;
   showPassword = false;
-
-  readonly roles = [
-    { value: 'ENCARGADO', label: 'Encargado' },
-    { value: 'ADMINISTRADOR', label: 'Administrador' }
-  ];
-
-  readonly areas = [
-    { value: 'CAMPO', label: 'Campo' },
-    { value: 'PLANTA', label: 'Planta' },
-    { value: 'ALMACEN', label: 'Almacén' },
-    { value: 'ADMINISTRACION', label: 'Administración' },
-    { value: 'CALIDAD', label: 'Calidad' }
-  ];
 
   constructor(
     private readonly authService: AuthService,
@@ -42,7 +31,7 @@ export class RegisterPageComponent {
   ) {}
 
   onSubmit(): void {
-    if (!this.model.nombreCompleto.trim() || !this.model.correo.trim() ||
+    if (!this.model.nombreCompleto.trim() || !this.model.email.trim() ||
         !this.model.username.trim() || !this.model.password.trim()) {
       Swal.fire({
         icon: 'warning',
@@ -75,23 +64,21 @@ export class RegisterPageComponent {
 
     this.loading = true;
 
-    const payload = {
-      nombreCompleto: this.model.nombreCompleto,
-      correo: this.model.correo,
-      username: this.model.username,
-      password: this.model.password,
-      rol: this.model.rol,
-      area: this.model.area,
-      estado: true
-    };
-
-    this.authService.register(payload).subscribe({
+    this.authService.register({
+      ...this.model,
+      nombreCompleto: this.model.nombreCompleto.trim(),
+      username: this.model.username.trim(),
+      email: this.model.email.trim().toLowerCase(),
+      telefono: this.model.telefono.trim(),
+      direccion: this.model.direccion.trim(),
+      areaTrabajo: this.model.areaTrabajo.trim()
+    }).subscribe({
       next: () => {
         this.loading = false;
         Swal.fire({
           icon: 'success',
           title: '¡Registro exitoso!',
-          text: 'Tu cuenta ha sido creada. Ahora puedes iniciar sesión.',
+          text: 'Tu cuenta ha sido creada en el backend. Ahora puedes iniciar sesión.',
           confirmButtonColor: '#059669'
         }).then(() => {
           this.router.navigate(['/login']);
@@ -102,7 +89,7 @@ export class RegisterPageComponent {
         Swal.fire({
           icon: 'error',
           title: 'Error al registrar',
-          text: err.error?.message || 'No se pudo crear la cuenta. Verifica los datos.',
+          text: err.message || 'No se pudo crear la cuenta. Verifica los datos.',
           confirmButtonColor: '#059669'
         });
       }

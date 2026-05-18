@@ -3,6 +3,7 @@ import { DashboardSummary } from '../../interfaces/dashboard.interface';
 import { DashboardService } from '../../services/dashboard.service';
 import { Alerta } from '../../../alertas/interfaces/alerta.interface';
 import { AlertasService } from '../../../alertas/services/alertas.service';
+import { HttpErrorService } from '../../../../core/services/http-error.service';
 
 @Component({
   selector: 'app-dashboard-page',
@@ -18,7 +19,8 @@ export class DashboardPageComponent implements OnInit {
 
   constructor(
     private readonly dashboardService: DashboardService,
-    private readonly alertasService: AlertasService
+    private readonly alertasService: AlertasService,
+    private readonly httpErrorService: HttpErrorService
   ) {}
 
   ngOnInit(): void {
@@ -38,8 +40,8 @@ export class DashboardPageComponent implements OnInit {
         this.summary = response;
         this.loading = false;
       },
-      error: () => {
-        this.error = 'No se pudo cargar el resumen del dashboard.';
+      error: (err) => {
+        this.error = this.httpErrorService.toMessage(err, 'No se pudo cargar el resumen del dashboard.');
         this.loading = false;
       }
     });

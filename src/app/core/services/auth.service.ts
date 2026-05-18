@@ -1,55 +1,68 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Observable, throwError, TimeoutError } from 'rxjs';
+import { map, catchError, timeout } from 'rxjs/operators';
+import {
+  AuthUser,
+  LoginResponse,
+  LoginRequest,
+  RegisterRequest,
+  RegisterResponse
+} from '../../features/auth/interfaces/auth.interface';
+import { UsuariosService } from '../../features/auth/services/usuarios.service';
+import { HttpErrorService } from './http-error.service';
 import { environment } from '../../../environments/environment';
-import { AuthUser, LoginRequest, RegisterRequest } from '../../features/auth/interfaces/auth.interface';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private readonly STORAGE_KEY = 'arona_auth_user';
-  private readonly TOKEN_KEY = 'arona_auth_token';
-  private readonly base = environment.authApiUrl;
+  private readonly STORAGE_KEY = 'user';
+  private readonly LEGACY_STORAGE_KEYS = ['currentUser', 'arona_auth_user'];
 
-  constructor(private readonly http: HttpClient) {}
+  constructor(
+    private readonly usuariosService: UsuariosService,
+    private readonly httpErrorService: HttpErrorService
+  ) {}
 
   login(credentials: LoginRequest): Observable<AuthUser> {
-    return this.http.post<any>(`${this.base}/usuarios/login`, credentials).pipe(
-      map(u => {
-        const authUser: AuthUser = {
-          id: u.idUsuario,
-          username: u.username ?? '',
-          correo: u.correo,
-          nombreCompleto: u.nombreCompleto,
-          rol: u.rol,
-          area: u.area,
-          estado: u.estado
-        };
-        const token = btoa(`${authUser.correo}:${Date.now()}`);
-        this.saveSession(authUser, token);
+    return this.usuariosService.login({
+      email: credentials.email,
+      password: credentials.password
+    }).pipe(
+      timeout({ first: environment.apiTimeoutMs }),
+      map((response) => {
+        const authUser = this.toAuthUser(response);
+        this.saveSession(authUser);
         return authUser;
       }),
       catchError(err => {
-        if (err.status === 401) {
-          return throwError(() => new Error('Credenciales inválidas. Verifica tu correo y contraseña.'));
+        if (err instanceof TimeoutError) {
+          return throwError(() => new Error('La solicitud tardó demasiado. Inténtalo nuevamente.'));
         }
-        return throwError(() => new Error('Error de conexión con el servidor.'));
+
+        if (err instanceof HttpErrorResponse && err.status === 401) {
+          return throwError(() => new Error('Credenciales inválidas'));
+        }
+
+        return throwError(() => new Error(this.httpErrorService.toMessage(err, 'No se pudo iniciar sesión.')));
       })
     );
   }
 
-  register(userData: RegisterRequest): Observable<any> {
-    return this.http.post<any>(`${this.base}/usuarios`, userData);
+  register(userData: RegisterRequest): Observable<RegisterResponse> {
+    return this.usuariosService.register(userData).pipe(
+      catchError((err) => throwError(() => new Error(this.httpErrorService.toMessage(err, 'No se pudo registrar el usuario.'))))
+    );
   }
 
   isAuthenticated(): boolean {
-    return !!this.getToken();
+    return this.getCurrentUser() !== null;
   }
 
   getCurrentUser(): AuthUser | null {
-    const data = localStorage.getItem(this.STORAGE_KEY);
+    const data = localStorage.getItem(this.STORAGE_KEY)
+      ?? this.findLegacySession();
     if (!data) return null;
     try {
       return JSON.parse(data) as AuthUser;
@@ -58,17 +71,36 @@ export class AuthService {
     }
   }
 
-  getToken(): string | null {
-    return localStorage.getItem(this.TOKEN_KEY);
-  }
-
   logout(): void {
     localStorage.removeItem(this.STORAGE_KEY);
-    localStorage.removeItem(this.TOKEN_KEY);
+    this.LEGACY_STORAGE_KEYS.forEach(key => localStorage.removeItem(key));
   }
 
-  private saveSession(user: AuthUser, token: string): void {
+  private saveSession(user: AuthUser): void {
     localStorage.setItem(this.STORAGE_KEY, JSON.stringify(user));
-    localStorage.setItem(this.TOKEN_KEY, token);
+  }
+
+  private toAuthUser(user: LoginResponse): AuthUser {
+    return {
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      nombreCompleto: user.nombreCompleto,
+      telefono: user.telefono ?? null,
+      direccion: user.direccion ?? null,
+      fechaRegistro: null,
+      rol: user.rol ?? null,
+      estado: user.estado ?? null
+    };
+  }
+
+  private findLegacySession(): string | null {
+    for (const key of this.LEGACY_STORAGE_KEYS) {
+      const data = localStorage.getItem(key);
+      if (data) {
+        return data;
+      }
+    }
+    return null;
   }
 }

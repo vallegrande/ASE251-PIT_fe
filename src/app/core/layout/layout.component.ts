@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService, AuthUser } from '../services/auth.service';
+import { AuthService } from '../services/auth.service';
+import { AuthUser } from '../../features/auth/interfaces/auth.interface';
 
 /**
  * Layout principal del sistema.

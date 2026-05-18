@@ -37,14 +37,14 @@
         </div>
       </div>
 
-      <!-- Correo -->
+      <!-- Email -->
       <div class="reg-field">
-        <label for="reg-correo">Correo Electrónico *</label>
+        <label for="reg-email">Email *</label>
         <div class="field-wrap">
           <i class="bi bi-envelope-fill field-icon"></i>
-          <input id="reg-correo" type="email"
-                 [(ngModel)]="model.correo" name="correo"
-                 placeholder="correo@arona.com" />
+          <input id="reg-email" type="email"
+                 [(ngModel)]="model.email" name="email"
+                 placeholder="usuario@camoteapp.com" />
         </div>
       </div>
 
@@ -84,27 +84,33 @@
         </div>
       </div>
 
-      <!-- Rol -->
       <div class="reg-field">
-        <label for="reg-rol">Rol *</label>
-        <div class="field-wrap select-wrap">
-          <i class="bi bi-shield-fill-check field-icon"></i>
-          <select id="reg-rol" [(ngModel)]="model.rol" name="rol">
-            <option *ngFor="let r of roles" [value]="r.value">{{ r.label }}</option>
-          </select>
-          <i class="bi bi-chevron-down select-chevron"></i>
+        <label for="reg-telefono">Teléfono</label>
+        <div class="field-wrap">
+          <i class="bi bi-telephone-fill field-icon"></i>
+          <input id="reg-telefono" type="text"
+                 [(ngModel)]="model.telefono" name="telefono"
+                 placeholder="Ej: +51 999 999 999" />
         </div>
       </div>
 
-      <!-- Área -->
       <div class="reg-field">
-        <label for="reg-area">Área de Trabajo *</label>
-        <div class="field-wrap select-wrap">
-          <i class="bi bi-building field-icon"></i>
-          <select id="reg-area" [(ngModel)]="model.area" name="area">
-            <option *ngFor="let a of areas" [value]="a.value">{{ a.label }}</option>
-          </select>
-          <i class="bi bi-chevron-down select-chevron"></i>
+        <label for="reg-area-trabajo">Área de Trabajo</label>
+        <div class="field-wrap">
+          <i class="bi bi-diagram-3-fill field-icon"></i>
+          <input id="reg-area-trabajo" type="text"
+                 [(ngModel)]="model.areaTrabajo" name="areaTrabajo"
+                 placeholder="Ej: Producción / Campo" />
+        </div>
+      </div>
+
+      <div class="reg-field reg-full">
+        <label for="reg-direccion">Dirección</label>
+        <div class="field-wrap">
+          <i class="bi bi-geo-alt-fill field-icon"></i>
+          <input id="reg-direccion" type="text"
+                 [(ngModel)]="model.direccion" name="direccion"
+                 placeholder="Dirección de residencia" />
         </div>
       </div>
 

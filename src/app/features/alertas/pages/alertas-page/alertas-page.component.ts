@@ -4,6 +4,7 @@ import { AlertasService } from '../../services/alertas.service';
 import { Parcela } from '../../../parcelas/interfaces/parcela.interface';
 import { ParcelasService } from '../../../parcelas/services/parcelas.service';
 import Swal from 'sweetalert2';
+import { HttpErrorService } from '../../../../core/services/http-error.service';
 
 @Component({
   selector: 'app-alertas-page',
@@ -18,19 +19,20 @@ export class AlertasPageComponent implements OnInit {
   error: string | null = null;
   showForm = false;
 
-  readonly tipos = ['PLAGA', 'SEQUIA', 'LLUVIA_INTENSA', 'TEMPERATURA', 'OTRO'];
+  readonly tipos = ['PLAGA', 'SEQUIA', 'LLUVIA_INTENSA', 'CALOR_EXCESIVO', 'HUMEDAD_BAJA', 'ENFERMEDAD', 'OTRO'];
   readonly niveles = ['BAJA', 'MEDIA', 'ALTA', 'CRITICA'];
 
   model: AlertaRequest = {
-    parcelaId: 0,
+    parcela: { id: 0 },
     tipo: 'PLAGA',
-    nivel: 'MEDIA',
-    descripcion: ''
+    nivelRiesgo: 'MEDIA',
+    mensaje: ''
   };
 
   constructor(
     private readonly alertasService: AlertasService,
-    private readonly parcelasService: ParcelasService
+    private readonly parcelasService: ParcelasService,
+    private readonly httpErrorService: HttpErrorService
   ) {}
 
   ngOnInit(): void {
@@ -46,8 +48,8 @@ export class AlertasPageComponent implements OnInit {
         this.alertas = response;
         this.loading = false;
       },
-      error: () => {
-        this.error = 'No se pudo cargar la lista de alertas.';
+      error: (err) => {
+        this.error = this.httpErrorService.toMessage(err, 'No se pudo cargar la lista de alertas.');
         this.loading = false;
       }
     });
@@ -57,28 +59,31 @@ export class AlertasPageComponent implements OnInit {
     this.parcelasService.list().subscribe({
       next: (response) => {
         this.parcelas = response;
-        if (this.parcelas.length > 0 && this.model.parcelaId === 0) {
-          this.model.parcelaId = this.parcelas[0].id;
+        if (this.parcelas.length > 0 && this.model.parcela.id === 0) {
+          this.model.parcela.id = this.parcelas[0].id ?? 0;
         }
       }
     });
   }
 
   create(): void {
-    if (!this.model.descripcion.trim()) {
+    if (!this.model.mensaje.trim()) {
       Swal.fire({ icon: 'warning', title: 'Campo requerido', text: 'Ingresa la descripción de la alerta.', confirmButtonColor: '#059669' });
       return;
     }
 
-    this.alertasService.create(this.model).subscribe({
+    this.alertasService.create({
+      ...this.model,
+      mensaje: this.model.mensaje.trim()
+    }).subscribe({
       next: () => {
         Swal.fire({ icon: 'success', title: 'Alerta registrada', timer: 1500, showConfirmButton: false, timerProgressBar: true });
-        this.model.descripcion = '';
+        this.model.mensaje = '';
         this.showForm = false;
         this.load();
       },
-      error: () => {
-        Swal.fire({ icon: 'error', title: 'Error', text: 'No se pudo registrar la alerta.', confirmButtonColor: '#059669' });
+      error: (err) => {
+        Swal.fire({ icon: 'error', title: 'Error', text: this.httpErrorService.toMessage(err, 'No se pudo registrar la alerta.'), confirmButtonColor: '#059669' });
       }
     });
   }
@@ -97,7 +102,7 @@ export class AlertasPageComponent implements OnInit {
       if (result.isConfirmed) {
         this.alertasService.atender(id).subscribe({
           next: () => this.load(),
-          error: () => Swal.fire({ icon: 'error', title: 'Error', text: 'No se pudo atender la alerta.' })
+          error: (err) => Swal.fire({ icon: 'error', title: 'Error', text: this.httpErrorService.toMessage(err, 'No se pudo atender la alerta.') })
         });
       }
     });
@@ -117,7 +122,7 @@ export class AlertasPageComponent implements OnInit {
       if (result.isConfirmed) {
         this.alertasService.descartar(id).subscribe({
           next: () => this.load(),
-          error: () => Swal.fire({ icon: 'error', title: 'Error', text: 'No se pudo descartar la alerta.' })
+          error: (err) => Swal.fire({ icon: 'error', title: 'Error', text: this.httpErrorService.toMessage(err, 'No se pudo descartar la alerta.') })
         });
       }
     });

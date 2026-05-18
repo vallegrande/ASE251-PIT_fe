@@ -10,7 +10,9 @@ import Swal from 'sweetalert2';
   standalone: false
 })
 export class LoginPageComponent {
-  correo = '';
+  private readonly EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  email = '';
   password = '';
   remember = false;
   loading = false;
@@ -23,19 +25,32 @@ export class LoginPageComponent {
     if (this.authService.isAuthenticated()) {
       this.router.navigate(['/dashboard']);
     }
-    const saved = localStorage.getItem('arona_remember_correo');
+    const saved = localStorage.getItem('arona_remember_email');
     if (saved) {
-      this.correo = saved;
+      this.email = saved;
       this.remember = true;
     }
   }
 
   onSubmit(): void {
-    if (!this.correo.trim() || !this.password.trim()) {
+    const email = this.email.trim();
+    const password = this.password.trim();
+
+    if (!email || !password) {
       Swal.fire({
         icon: 'warning',
         title: 'Campos requeridos',
-        text: 'Ingresa tu correo y contraseña.',
+        text: 'Ingresa tu email y contraseña.',
+        confirmButtonColor: '#059669'
+      });
+      return;
+    }
+
+    if (!this.EMAIL_REGEX.test(email)) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Email inválido',
+        text: 'Ingresa un correo electrónico válido.',
         confirmButtonColor: '#059669'
       });
       return;
@@ -43,13 +58,13 @@ export class LoginPageComponent {
 
     this.loading = true;
 
-    this.authService.login({ correo: this.correo, password: this.password }).subscribe({
+    this.authService.login({ email, password }).subscribe({
       next: (user) => {
         this.loading = false;
         if (this.remember) {
-          localStorage.setItem('arona_remember_correo', this.correo);
+          localStorage.setItem('arona_remember_email', email);
         } else {
-          localStorage.removeItem('arona_remember_correo');
+          localStorage.removeItem('arona_remember_email');
         }
         Swal.fire({
           icon: 'success',
@@ -67,7 +82,7 @@ export class LoginPageComponent {
         Swal.fire({
           icon: 'error',
           title: 'Error de autenticación',
-          text: err.message || 'No se pudo iniciar sesión.',
+          text: (err as Error).message || 'No se pudo iniciar sesión.',
           confirmButtonColor: '#059669'
         });
       }

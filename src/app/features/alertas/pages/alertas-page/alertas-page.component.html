@@ -15,7 +15,7 @@
     <form (ngSubmit)="create()" class="create-form">
       <label>
         Parcela *
-        <select [(ngModel)]="model.parcelaId" name="parcelaId" required>
+        <select [(ngModel)]="model.parcela.id" name="parcelaId" required>
           <option *ngFor="let parcela of parcelas" [ngValue]="parcela.id">
             {{ parcela.nombre }}
           </option>
@@ -31,14 +31,14 @@
 
       <label>
         Nivel de Riesgo *
-        <select [(ngModel)]="model.nivel" name="nivel" required>
+        <select [(ngModel)]="model.nivelRiesgo" name="nivelRiesgo" required>
           <option *ngFor="let nivel of niveles" [value]="nivel">{{ nivel }}</option>
         </select>
       </label>
 
       <label class="full-width">
-        Descripción *
-        <textarea [(ngModel)]="model.descripcion" name="descripcion" rows="3"
+        Mensaje *
+        <textarea [(ngModel)]="model.mensaje" name="mensaje" rows="3"
                   placeholder="Describe la alerta de riesgo..." required></textarea>
       </label>
 

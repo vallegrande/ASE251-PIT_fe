@@ -19,14 +19,14 @@ export class MonitoreoTableComponent {
   }
 
   /** Indica si la temperatura está fuera de rango óptimo para camote (20-30°C) */
-  isTempWarning(temp: number | null): boolean {
-    if (temp === null) return false;
+  isTempWarning(temp: number | null | undefined): boolean {
+    if (temp == null) return false;
     return temp < 18 || temp > 32;
   }
 
   /** Indica si la humedad está fuera de rango (40-80%) */
-  isHumedadWarning(humedad: number | null): boolean {
-    if (humedad === null) return false;
+  isHumedadWarning(humedad: number | null | undefined): boolean {
+    if (humedad == null) return false;
     return humedad < 40 || humedad > 85;
   }
 }

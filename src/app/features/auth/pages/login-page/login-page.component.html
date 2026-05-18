@@ -68,15 +68,15 @@
       <form (ngSubmit)="onSubmit()" class="auth-form" autocomplete="on">
 
         <div class="field">
-          <label for="login-correo">Correo electrónico</label>
+          <label for="login-email">Email</label>
           <div class="field-wrap">
             <i class="bi bi-envelope-fill field-icon"></i>
             <input
-              id="login-correo"
+              id="login-email"
               type="email"
-              [(ngModel)]="correo"
-              name="correo"
-              placeholder="usuario@arona.com"
+              [(ngModel)]="email"
+              name="email"
+              placeholder="usuario@camoteapp.com"
               autocomplete="email"
             />
           </div>

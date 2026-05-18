@@ -4,6 +4,7 @@ import { MonitoreoService } from '../../services/monitoreo.service';
 import { Parcela } from '../../../parcelas/interfaces/parcela.interface';
 import { ParcelasService } from '../../../parcelas/services/parcelas.service';
 import Swal from 'sweetalert2';
+import { HttpErrorService } from '../../../../core/services/http-error.service';
 
 /**
  * Página de monitoreo ambiental.
@@ -35,7 +36,8 @@ export class MonitoreoPageComponent implements OnInit {
 
   constructor(
     private readonly monitoreoService: MonitoreoService,
-    private readonly parcelasService: ParcelasService
+    private readonly parcelasService: ParcelasService,
+    private readonly httpErrorService: HttpErrorService
   ) {}
 
   ngOnInit(): void {
@@ -51,8 +53,8 @@ export class MonitoreoPageComponent implements OnInit {
         this.monitoreos = response;
         this.loading = false;
       },
-      error: () => {
-        this.error = 'No se pudo cargar los registros de monitoreo.';
+      error: (err) => {
+        this.error = this.httpErrorService.toMessage(err, 'No se pudo cargar los registros de monitoreo.');
         this.loading = false;
       }
     });
@@ -63,7 +65,7 @@ export class MonitoreoPageComponent implements OnInit {
       next: (response) => {
         this.parcelas = response;
         if (this.parcelas.length > 0 && this.model.parcela.id === 0) {
-          this.model.parcela = { id: this.parcelas[0].id };
+          this.model.parcela = { id: this.parcelas[0].id ?? 0 };
         }
       }
     });
@@ -75,15 +77,18 @@ export class MonitoreoPageComponent implements OnInit {
       return;
     }
 
-    this.monitoreoService.create(this.model).subscribe({
+    this.monitoreoService.create({
+      ...this.model,
+      fechaMonitoreo: this.model.fechaMonitoreo ?? new Date().toISOString()
+    }).subscribe({
       next: () => {
         Swal.fire({ icon: 'success', title: 'Monitoreo registrado', timer: 1500, showConfirmButton: false, timerProgressBar: true });
         this.showForm = false;
         this.resetModel();
         this.load();
       },
-      error: () => {
-        Swal.fire({ icon: 'error', title: 'Error', text: 'No se pudo registrar el monitoreo.', confirmButtonColor: '#059669' });
+      error: (err) => {
+        Swal.fire({ icon: 'error', title: 'Error', text: this.httpErrorService.toMessage(err, 'No se pudo registrar el monitoreo.'), confirmButtonColor: '#059669' });
       }
     });
   }
@@ -97,7 +102,7 @@ export class MonitoreoPageComponent implements OnInit {
       velocidadViento: null,
       observaciones: null,
       estado: 'COMPLETADO',
-      parcela: { id: this.parcelas.length > 0 ? this.parcelas[0].id : 0 }
+      parcela: { id: (this.parcelas.length > 0 ? this.parcelas[0].id : 0) ?? 0 }
     };
   }
 
