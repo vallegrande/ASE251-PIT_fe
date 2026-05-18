@@ -1,55 +1,66 @@
-<section>
-  <h2>Gestión de Alertas</h2>
+<section class="animate-fade-in">
+  <!-- Header -->
+  <div class="page-header">
+    <h2><i class="bi bi-exclamation-triangle-fill"></i> Gestión de Alertas</h2>
+    <button class="btn-primary" (click)="showForm = !showForm">
+      <i class="bi" [ngClass]="showForm ? 'bi-x-lg' : 'bi-plus-lg'"></i>
+      {{ showForm ? 'Cancelar' : 'Nueva Alerta' }}
+    </button>
+  </div>
 
-  <form class="panel filters" (ngSubmit)="load()">
-    <label>
-      Estado
-      <select [(ngModel)]="estadoFiltro" name="estadoFiltro">
-        <option value="">Todos</option>
-        <option *ngFor="let estado of estados" [value]="estado">{{ estado }}</option>
-      </select>
-    </label>
-    <button type="submit">Filtrar</button>
-  </form>
+  <!-- Create Form -->
+  <div class="panel" *ngIf="showForm">
+    <h3><i class="bi bi-plus-circle"></i> Registrar Nueva Alerta</h3>
 
-  <form class="panel create-form" (ngSubmit)="create()">
-    <h3>Nueva alerta</h3>
+    <form (ngSubmit)="create()" class="create-form">
+      <label>
+        Parcela *
+        <select [(ngModel)]="model.parcelaId" name="parcelaId" required>
+          <option *ngFor="let parcela of parcelas" [ngValue]="parcela.id">
+            {{ parcela.nombre }}
+          </option>
+        </select>
+      </label>
 
-    <label>
-      Parcela
-      <select [(ngModel)]="model.parcelaId" name="parcelaId" required>
-        <option *ngFor="let parcela of parcelas" [ngValue]="parcela.id">
-          {{ parcela.nombre }}
-        </option>
-      </select>
-    </label>
+      <label>
+        Tipo *
+        <select [(ngModel)]="model.tipo" name="tipo" required>
+          <option *ngFor="let tipo of tipos" [value]="tipo">{{ tipo }}</option>
+        </select>
+      </label>
 
-    <label>
-      Tipo
-      <select [(ngModel)]="model.tipo" name="tipo" required>
-        <option *ngFor="let tipo of tipos" [value]="tipo">{{ tipo }}</option>
-      </select>
-    </label>
+      <label>
+        Nivel de Riesgo *
+        <select [(ngModel)]="model.nivel" name="nivel" required>
+          <option *ngFor="let nivel of niveles" [value]="nivel">{{ nivel }}</option>
+        </select>
+      </label>
 
-    <label>
-      Nivel
-      <select [(ngModel)]="model.nivel" name="nivel" required>
-        <option *ngFor="let nivel of niveles" [value]="nivel">{{ nivel }}</option>
-      </select>
-    </label>
+      <label class="full-width">
+        Descripción *
+        <textarea [(ngModel)]="model.descripcion" name="descripcion" rows="3"
+                  placeholder="Describe la alerta de riesgo..." required></textarea>
+      </label>
 
-    <label class="full">
-      Descripción
-      <textarea [(ngModel)]="model.descripcion" name="descripcion" rows="3" required></textarea>
-    </label>
+      <div class="form-actions full-width">
+        <button type="submit" class="btn-primary">
+          <i class="bi bi-check-lg"></i> Registrar Alerta
+        </button>
+      </div>
+    </form>
+  </div>
 
-    <button type="submit">Guardar alerta</button>
-  </form>
+  <!-- Loading -->
+  <app-loader *ngIf="loading" message="Cargando alertas..."></app-loader>
 
-  <p class="status" *ngIf="loading">Cargando alertas...</p>
-  <p class="status error" *ngIf="error">{{ error }}</p>
+  <!-- Error -->
+  <p class="status error" *ngIf="error">
+    <i class="bi bi-exclamation-circle"></i> {{ error }}
+  </p>
 
+  <!-- Alert List -->
   <app-alerta-list
+    *ngIf="!loading"
     [alertas]="alertas"
     (atender)="atender($event)"
     (descartar)="descartar($event)"

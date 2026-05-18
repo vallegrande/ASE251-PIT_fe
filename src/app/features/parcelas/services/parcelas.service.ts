@@ -13,19 +13,23 @@ export class ParcelasService {
     private readonly api: ApiService
   ) {}
 
-  list(nombre = '', estado = ''): Observable<Parcela[]> {
+  list(filtros?: { nombre?: string; estado?: EstadoParcela }): Observable<Parcela[]> {
     let params = new HttpParams();
-    if (nombre.trim()) {
-      params = params.set('nombre', nombre.trim());
-    }
-    if (estado.trim()) {
-      params = params.set('estado', estado);
-    }
+    if (filtros?.nombre) params = params.set('nombre', filtros.nombre);
+    if (filtros?.estado) params = params.set('estado', filtros.estado);
     return this.http.get<Parcela[]>(this.api.endpoint('parcelas'), { params });
+  }
+
+  getById(id: number): Observable<Parcela> {
+    return this.http.get<Parcela>(this.api.endpoint(`parcelas/${id}`));
   }
 
   create(payload: ParcelaRequest): Observable<Parcela> {
     return this.http.post<Parcela>(this.api.endpoint('parcelas'), payload);
+  }
+
+  update(id: number, payload: ParcelaRequest): Observable<Parcela> {
+    return this.http.put<Parcela>(this.api.endpoint(`parcelas/${id}`), payload);
   }
 
   remove(id: number): Observable<void> {
@@ -33,12 +37,11 @@ export class ParcelasService {
   }
 
   estadoLabel(estado: EstadoParcela): string {
-    if (estado === 'EN_RIESGO') {
-      return 'En riesgo';
+    switch (estado) {
+      case 'ACTIVO': return 'Activo';
+      case 'EN_RIESGO': return 'En riesgo';
+      case 'INACTIVO': return 'Inactivo';
+      default: return estado;
     }
-    if (estado === 'ACTIVO') {
-      return 'Activo';
-    }
-    return 'Inactivo';
   }
 }

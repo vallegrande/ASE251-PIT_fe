@@ -1,0 +1,39 @@
+<div class="recent-card" *ngIf="alertas.length > 0">
+  <h3><i class="bi bi-clock-history"></i> Alertas Recientes</h3>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Tipo</th>
+          <th>Nivel</th>
+          <th>Parcela</th>
+          <th>Estado</th>
+          <th>Fecha</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let alerta of recentAlertas">
+          <td>
+            <span class="tipo-cell">
+              <i class="bi bi-exclamation-diamond"></i>
+              {{ alerta.tipo }}
+            </span>
+          </td>
+          <td>
+            <span class="badge" [ngClass]="getNivelClass(alerta.nivel)">
+              {{ getNivelLabel(alerta.nivel) }}
+            </span>
+          </td>
+          <td>{{ alerta.parcelaNombre || '-' }}</td>
+          <td>
+            <span class="badge" [ngClass]="alerta.estado === 'PENDIENTE' ? 'badge-warning' : 'badge-neutral'">
+              {{ alerta.estado }}
+            </span>
+          </td>
+          <td>{{ formatDate(alerta.fechaAlerta) }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

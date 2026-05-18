@@ -1,0 +1,25 @@
+.name-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.name-cell i {
+  color: var(--primary-500);
+  font-size: 0.85rem;
+}
+
+.valor-warning {
+  color: var(--danger-600);
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.valor-warning i {
+  font-size: 0.75rem;
+  color: var(--danger-500);
+}

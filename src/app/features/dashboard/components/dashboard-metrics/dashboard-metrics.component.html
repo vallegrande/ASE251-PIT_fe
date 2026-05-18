@@ -1,27 +1,49 @@
-<section class="grid" *ngIf="summary">
-  <app-stat-card label="Total de parcelas" [value]="summary.totalParcelas"></app-stat-card>
+<section class="metrics-grid" *ngIf="summary">
   <app-stat-card
-    label="Parcelas activas"
+    label="Total Parcelas"
+    [value]="summary.totalParcelas"
+    icon="bi-map-fill"
+    tone="info"
+    hint="Parcelas registradas"
+  ></app-stat-card>
+
+  <app-stat-card
+    label="Parcelas Activas"
     [value]="summary.parcelasActivas"
+    icon="bi-check-circle-fill"
     tone="success"
+    hint="En producción"
   ></app-stat-card>
+
   <app-stat-card
-    label="Parcelas en riesgo"
+    label="Parcelas en Riesgo"
     [value]="summary.parcelasEnRiesgo"
-    tone="danger"
+    icon="bi-exclamation-triangle-fill"
+    tone="warning"
+    hint="Requieren atención"
   ></app-stat-card>
+
   <app-stat-card
-    label="Área activa (ha)"
-    [value]="(summary.areaTotalHectareas | number : '1.0-2') || '-'"
+    label="Área Total (ha)"
+    [value]="summary.areaTotalHectareas"
+    icon="bi-rulers"
+    tone="info"
+    hint="Hectáreas totales"
   ></app-stat-card>
+
   <app-stat-card
-    label="Alertas pendientes"
+    label="Alertas Pendientes"
     [value]="summary.alertasPendientes"
-    tone="danger"
+    icon="bi-bell-fill"
+    tone="warning"
+    hint="Sin atender"
   ></app-stat-card>
+
   <app-stat-card
-    label="Alertas críticas"
+    label="Alertas Críticas"
     [value]="summary.alertasCriticas"
+    icon="bi-shield-exclamation"
     tone="danger"
+    hint="Nivel crítico"
   ></app-stat-card>
 </section>

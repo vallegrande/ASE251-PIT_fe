@@ -1,73 +1,93 @@
-<section>
-  <h2>Gestión de Parcelas</h2>
+<section class="animate-fade-in">
+  <!-- Header -->
+  <div class="page-header">
+    <h2><i class="bi bi-map-fill"></i> Gestión de Parcelas</h2>
+    <div class="header-actions">
+      <div class="search-box">
+        <i class="bi bi-search"></i>
+        <input type="text" [(ngModel)]="searchQuery" name="search"
+               placeholder="Buscar parcela..." (keyup.enter)="onSearch()" />
+      </div>
+      <button class="btn-primary" (click)="openCreate()">
+        <i class="bi bi-plus-lg"></i> Nueva Parcela
+      </button>
+    </div>
+  </div>
 
-  <form class="panel filters" (ngSubmit)="load()">
-    <label>
-      Nombre
-      <input type="text" [(ngModel)]="nombreFiltro" name="nombreFiltro" />
-    </label>
+  <!-- Create / Edit Form -->
+  <div class="panel form-panel" *ngIf="showForm">
+    <h3>
+      <i class="bi" [ngClass]="editingId ? 'bi-pencil-square' : 'bi-plus-circle'"></i>
+      {{ editingId ? 'Editar Parcela' : 'Nueva Parcela' }}
+    </h3>
 
-    <label>
-      Estado
-      <select [(ngModel)]="estadoFiltro" name="estadoFiltro">
-        <option value="">Todos</option>
-        <option *ngFor="let estado of estados" [value]="estado.value">{{ estado.label }}</option>
-      </select>
-    </label>
+    <form (ngSubmit)="save()" class="create-form">
+      <label>
+        Nombre *
+        <input type="text" [(ngModel)]="model.nombre" name="nombre" placeholder="Nombre de la parcela" required />
+      </label>
 
-    <button type="submit">Filtrar</button>
-  </form>
+      <label>
+        Ubicación *
+        <input type="text" [(ngModel)]="model.ubicacion" name="ubicacion" placeholder="Ubicación geográfica" required />
+      </label>
 
-  <form class="panel create-form" (ngSubmit)="create()">
-    <h3>Nueva parcela</h3>
+      <label>
+        Área (ha) *
+        <input type="number" min="0.01" step="0.01" [(ngModel)]="model.area" name="area" required />
+      </label>
 
-    <label>
-      Nombre
-      <input type="text" [(ngModel)]="model.nombre" name="nombre" required />
-    </label>
+      <label>
+        Estado
+        <select [(ngModel)]="model.estado" name="estado" required>
+          <option *ngFor="let estado of estados" [value]="estado.value">{{ estado.label }}</option>
+        </select>
+      </label>
 
-    <label>
-      Área (ha)
-      <input type="number" min="0.01" step="0.01" [(ngModel)]="model.area" name="area" required />
-    </label>
+      <label>
+        Humedad (%)
+        <input type="number" min="0" max="100" step="0.1" [(ngModel)]="model.humedad" name="humedad" placeholder="Ej: 60.5" />
+      </label>
 
-    <label>
-      Ubicación
-      <input type="text" [(ngModel)]="model.ubicacion" name="ubicacion" required />
-    </label>
+      <label>
+        Temperatura (°C)
+        <input type="number" step="0.1" [(ngModel)]="model.temperatura" name="temperatura" placeholder="Ej: 25.0" />
+      </label>
 
-    <label>
-      Estado
-      <select [(ngModel)]="model.estado" name="estado" required>
-        <option *ngFor="let estado of estados" [value]="estado.value">{{ estado.label }}</option>
-      </select>
-    </label>
+      <label>
+        Fecha de Siembra
+        <input type="date" [(ngModel)]="model.fechaSiembra" name="fechaSiembra" />
+      </label>
 
-    <label>
-      Humedad
-      <input type="number" step="0.01" [(ngModel)]="model.humedad" name="humedad" />
-    </label>
+      <label>
+        Fecha Cosecha Estimada
+        <input type="date" [(ngModel)]="model.fechaCosechaEstimada" name="fechaCosechaEstimada" />
+      </label>
 
-    <label>
-      Temperatura
-      <input type="number" step="0.01" [(ngModel)]="model.temperatura" name="temperatura" />
-    </label>
+      <div class="form-actions full-width">
+        <button type="submit" class="btn-primary">
+          <i class="bi bi-check-lg"></i> {{ editingId ? 'Actualizar' : 'Guardar' }}
+        </button>
+        <button type="button" class="btn-secondary" (click)="cancelForm()">
+          <i class="bi bi-x-lg"></i> Cancelar
+        </button>
+      </div>
+    </form>
+  </div>
 
-    <label>
-      Fecha de siembra
-      <input type="date" [(ngModel)]="model.fechaSiembra" name="fechaSiembra" />
-    </label>
+  <!-- Loading -->
+  <app-loader *ngIf="loading" message="Cargando parcelas..."></app-loader>
 
-    <label>
-      Fecha estimada de cosecha
-      <input type="date" [(ngModel)]="model.fechaCosechaEstimada" name="fechaCosechaEstimada" />
-    </label>
+  <!-- Error -->
+  <p class="status error" *ngIf="error">
+    <i class="bi bi-exclamation-circle"></i> {{ error }}
+  </p>
 
-    <button type="submit">Guardar parcela</button>
-  </form>
-
-  <p class="status" *ngIf="loading">Cargando parcelas...</p>
-  <p class="status error" *ngIf="error">{{ error }}</p>
-
-  <app-parcela-table [parcelas]="parcelas" (deleteParcela)="delete($event)"></app-parcela-table>
+  <!-- Table -->
+  <app-parcela-table
+    *ngIf="!loading"
+    [parcelas]="parcelas"
+    (deleteParcela)="delete($event)"
+    (editParcela)="openEdit($event)"
+  ></app-parcela-table>
 </section>

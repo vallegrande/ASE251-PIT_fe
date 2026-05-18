@@ -1,0 +1,19 @@
+<div class="charts-grid">
+  <!-- Alertas por Nivel -->
+  <div class="chart-card">
+    <h3><i class="bi bi-pie-chart-fill"></i> Distribución por Nivel</h3>
+    <div class="chart-container">
+      <canvas #alertChart></canvas>
+    </div>
+    <p class="chart-empty" *ngIf="alertas.length === 0">Sin datos de alertas</p>
+  </div>
+
+  <!-- Alertas por Estado -->
+  <div class="chart-card">
+    <h3><i class="bi bi-bar-chart-fill"></i> Alertas por Estado</h3>
+    <div class="chart-container chart-line">
+      <canvas #estadoChart></canvas>
+    </div>
+    <p class="chart-empty" *ngIf="alertas.length === 0">Sin datos de alertas</p>
+  </div>
+</div>

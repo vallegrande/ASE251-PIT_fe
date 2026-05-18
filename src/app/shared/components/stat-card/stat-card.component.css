@@ -1,34 +1,95 @@
-.card {
-  border-radius: 4px;
-  padding: 0.7rem;
-  background: #ffffff;
-  border: 1px solid #d9dfdc;
+.stat-card {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  border: 1px solid var(--neutral-100);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-base);
+  animation: fadeIn 0.4s ease forwards;
 }
 
-.label {
+.stat-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.stat-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  flex-shrink: 0;
+  background: var(--primary-50);
+  color: var(--primary-600);
+}
+
+.stat-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.stat-label {
   margin: 0;
-  color: #55615e;
-  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
-.value {
-  margin: 0.22rem 0;
-  color: #1f2a2a;
-  font-size: 1.22rem;
+.stat-value {
+  margin: 0.2rem 0 0;
+  color: var(--text-primary);
+  font-size: 1.55rem;
+  font-weight: 800;
+  line-height: 1.2;
 }
 
-.hint {
-  margin: 0;
-  color: #6b7a76;
-  font-size: 0.78rem;
+.stat-hint {
+  margin: 0.25rem 0 0;
+  color: var(--text-muted);
+  font-size: 0.73rem;
 }
 
-.tone-danger {
-  border-color: #f0d8d8;
-  background: #fff6f6;
+/* Tones */
+.tone-success .stat-icon {
+  background: var(--success-100);
+  color: #166534;
 }
 
-.tone-success {
-  border-color: #d1e8dc;
-  background: #f5fbf8;
+.tone-danger .stat-icon {
+  background: var(--danger-100);
+  color: var(--danger-600);
+}
+
+.tone-warning .stat-icon {
+  background: var(--warning-100);
+  color: var(--warning-600);
+}
+
+.tone-info .stat-icon {
+  background: var(--info-100);
+  color: var(--info-500);
+}
+
+@media (max-width: 480px) {
+  .stat-card {
+    padding: 1rem;
+  }
+
+  .stat-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 1.1rem;
+  }
+
+  .stat-value {
+    font-size: 1.3rem;
+  }
 }

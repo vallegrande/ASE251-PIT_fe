@@ -1,11 +1,31 @@
-<section class="page">
-  <div class="page-title">
-    <h2>Dashboard general</h2>
-    <button type="button" (click)="loadSummary()">Actualizar</button>
+<section class="dashboard-page animate-fade-in">
+  <!-- Page Header -->
+  <div class="page-header">
+    <h2><i class="bi bi-grid-1x2-fill"></i> Dashboard General</h2>
+    <button class="btn-primary" (click)="refresh()">
+      <i class="bi bi-arrow-clockwise"></i> Actualizar
+    </button>
   </div>
 
-  <p class="status" *ngIf="loading">Cargando métricas...</p>
-  <p class="status error" *ngIf="error">{{ error }}</p>
+  <!-- Loading -->
+  <app-loader *ngIf="loading" message="Cargando métricas del sistema..."></app-loader>
 
-  <app-dashboard-metrics *ngIf="!loading && !error" [summary]="summary"></app-dashboard-metrics>
+  <!-- Error -->
+  <p class="status error" *ngIf="error">
+    <i class="bi bi-exclamation-circle"></i> {{ error }}
+  </p>
+
+  <!-- Dashboard Content -->
+  <div *ngIf="!loading && !error">
+    <!-- Metric Cards -->
+    <app-dashboard-metrics [summary]="summary"></app-dashboard-metrics>
+
+    <!-- Charts Section -->
+    <div class="charts-section">
+      <app-dashboard-charts [alertas]="alertas"></app-dashboard-charts>
+    </div>
+
+    <!-- Recent Alerts -->
+    <app-recent-alerts [alertas]="alertas"></app-recent-alerts>
+  </div>
 </section>

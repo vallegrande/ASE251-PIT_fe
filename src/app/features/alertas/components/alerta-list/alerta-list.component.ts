@@ -12,16 +12,26 @@ export class AlertaListComponent {
   @Output() atender = new EventEmitter<number>();
   @Output() descartar = new EventEmitter<number>();
 
-  nivelLabel(value: Alerta['nivel']): string {
-    if (value === 'CRITICA') {
-      return 'Crítica';
+  getNivelClass(nivel: string): string {
+    switch (nivel) {
+      case 'CRITICA': return 'nivel-critica';
+      case 'ALTA': return 'nivel-alta';
+      case 'MEDIA': return 'nivel-media';
+      default: return 'nivel-baja';
     }
-    if (value === 'ALTA') {
-      return 'Alta';
+  }
+
+  getNivelLabel(nivel: string): string {
+    switch (nivel) {
+      case 'CRITICA': return 'Crítica';
+      case 'ALTA': return 'Alta';
+      case 'MEDIA': return 'Media';
+      default: return 'Baja';
     }
-    if (value === 'MEDIA') {
-      return 'Media';
-    }
-    return 'Baja';
+  }
+
+  formatDate(fecha: string | null): string {
+    if (!fecha) return '-';
+    return new Date(fecha).toLocaleDateString('es-PE', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
   }
 }

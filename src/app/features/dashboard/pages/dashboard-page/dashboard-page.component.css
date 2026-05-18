@@ -1,24 +1,3 @@
-.page-title {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.75rem;
-  background: #f4f6f5;
-  border: 1px solid #d9dfdc;
-  border-radius: 4px;
-  padding: 0.5rem 0.65rem;
-}
-
-h2 {
-  margin: 0;
-}
-
-.status {
-  color: #475569;
-  margin: 0.5rem 0;
-  font-size: 0.88rem;
-}
-
-.status.error {
-  color: #dc2626;
+.charts-section {
+  margin-top: 1.25rem;
 }

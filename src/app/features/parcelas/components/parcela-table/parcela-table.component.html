@@ -1,34 +1,50 @@
-<div class="table-wrapper">
-  <table *ngIf="parcelas.length > 0">
+<div class="table-wrapper" *ngIf="parcelas.length > 0">
+  <table>
     <thead>
       <tr>
         <th>Nombre</th>
         <th>Ubicación</th>
         <th>Área (ha)</th>
+        <th>Humedad (%)</th>
+        <th>Temperatura (°C)</th>
         <th>Estado</th>
-        <th>Humedad</th>
-        <th>Temperatura</th>
+        <th>Fecha Siembra</th>
         <th>Acciones</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let parcela of parcelas">
-        <td>{{ parcela.nombre }}</td>
+        <td class="name-cell">
+          <i class="bi bi-geo-alt-fill"></i>
+          {{ parcela.nombre }}
+        </td>
         <td>{{ parcela.ubicacion }}</td>
         <td>{{ parcela.area | number : '1.1-2' }}</td>
+        <td>{{ parcela.humedad !== null ? (parcela.humedad | number:'1.1-1') : '-' }}</td>
+        <td>{{ parcela.temperatura !== null ? (parcela.temperatura | number:'1.1-1') : '-' }}</td>
         <td>
-          <span class="badge" [class.risk]="parcela.estado === 'EN_RIESGO'" [class.inactive]="parcela.estado === 'INACTIVO'">
+          <span class="badge" [ngClass]="getEstadoClass(parcela.estado)">
             {{ getEstadoLabel(parcela.estado) }}
           </span>
         </td>
-        <td>{{ parcela.humedad ?? '-' }}</td>
-        <td>{{ parcela.temperatura ?? '-' }}</td>
+        <td>{{ formatDate(parcela.fechaSiembra) }}</td>
         <td>
-          <button type="button" (click)="deleteParcela.emit(parcela.id)">Eliminar</button>
+          <div class="action-buttons">
+            <button class="btn-icon btn-secondary" title="Editar" (click)="editParcela.emit(parcela)">
+              <i class="bi bi-pencil"></i>
+            </button>
+            <button class="btn-icon btn-danger" title="Eliminar" (click)="deleteParcela.emit(parcela.id)">
+              <i class="bi bi-trash3"></i>
+            </button>
+          </div>
         </td>
       </tr>
     </tbody>
   </table>
+</div>
 
-  <p class="empty" *ngIf="parcelas.length === 0">No hay parcelas registradas para este filtro.</p>
+<div class="empty-state" *ngIf="parcelas.length === 0">
+  <i class="bi bi-map"></i>
+  <p>No hay parcelas registradas</p>
+  <span>Crea tu primera parcela para comenzar</span>
 </div>

@@ -1,0 +1,127 @@
+<div class="reg-page">
+
+  <!-- Background decorative orbs -->
+  <div class="reg-orb reg-orb-1"></div>
+  <div class="reg-orb reg-orb-2"></div>
+  <div class="reg-orb reg-orb-3"></div>
+  <div class="reg-grid"></div>
+
+  <!-- Main card -->
+  <div class="reg-card">
+
+    <!-- Card header -->
+    <div class="reg-header">
+      <div class="reg-logo">
+        <i class="bi bi-tree-fill"></i>
+      </div>
+      <h2>Crear Cuenta</h2>
+      <p>Únete al sistema de gestión de Arona Agrícola S.A.</p>
+    </div>
+
+    <!-- Divider -->
+    <div class="reg-divider">
+      <span>Información de la cuenta</span>
+    </div>
+
+    <!-- Form -->
+    <form (ngSubmit)="onSubmit()" class="reg-form" autocomplete="off">
+
+      <!-- Nombre completo — full width -->
+      <div class="reg-field reg-full">
+        <label for="reg-nombre">Nombre Completo *</label>
+        <div class="field-wrap">
+          <i class="bi bi-person-fill field-icon"></i>
+          <input id="reg-nombre" type="text"
+                 [(ngModel)]="model.nombreCompleto" name="nombreCompleto"
+                 placeholder="Ej: Juan Carlos Pérez López" />
+        </div>
+      </div>
+
+      <!-- Correo -->
+      <div class="reg-field">
+        <label for="reg-correo">Correo Electrónico *</label>
+        <div class="field-wrap">
+          <i class="bi bi-envelope-fill field-icon"></i>
+          <input id="reg-correo" type="email"
+                 [(ngModel)]="model.correo" name="correo"
+                 placeholder="correo@arona.com" />
+        </div>
+      </div>
+
+      <!-- Username -->
+      <div class="reg-field">
+        <label for="reg-username">Usuario *</label>
+        <div class="field-wrap">
+          <i class="bi bi-at field-icon"></i>
+          <input id="reg-username" type="text"
+                 [(ngModel)]="model.username" name="username"
+                 placeholder="Ej: jperez" />
+        </div>
+      </div>
+
+      <!-- Password -->
+      <div class="reg-field">
+        <label for="reg-pwd">Contraseña *</label>
+        <div class="field-wrap">
+          <i class="bi bi-lock-fill field-icon"></i>
+          <input id="reg-pwd" [type]="showPassword ? 'text' : 'password'"
+                 [(ngModel)]="model.password" name="password"
+                 placeholder="Mínimo 4 caracteres" />
+          <button type="button" class="eye-btn" (click)="togglePassword()">
+            <i class="bi" [ngClass]="showPassword ? 'bi-eye-slash-fill' : 'bi-eye-fill'"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Confirmar Password -->
+      <div class="reg-field">
+        <label for="reg-confirm">Confirmar Contraseña *</label>
+        <div class="field-wrap">
+          <i class="bi bi-lock-fill field-icon"></i>
+          <input id="reg-confirm" [type]="showPassword ? 'text' : 'password'"
+                 [(ngModel)]="model.confirmPassword" name="confirmPassword"
+                 placeholder="Repite la contraseña" />
+        </div>
+      </div>
+
+      <!-- Rol -->
+      <div class="reg-field">
+        <label for="reg-rol">Rol *</label>
+        <div class="field-wrap select-wrap">
+          <i class="bi bi-shield-fill-check field-icon"></i>
+          <select id="reg-rol" [(ngModel)]="model.rol" name="rol">
+            <option *ngFor="let r of roles" [value]="r.value">{{ r.label }}</option>
+          </select>
+          <i class="bi bi-chevron-down select-chevron"></i>
+        </div>
+      </div>
+
+      <!-- Área -->
+      <div class="reg-field">
+        <label for="reg-area">Área de Trabajo *</label>
+        <div class="field-wrap select-wrap">
+          <i class="bi bi-building field-icon"></i>
+          <select id="reg-area" [(ngModel)]="model.area" name="area">
+            <option *ngFor="let a of areas" [value]="a.value">{{ a.label }}</option>
+          </select>
+          <i class="bi bi-chevron-down select-chevron"></i>
+        </div>
+      </div>
+
+      <!-- Submit — full width -->
+      <div class="reg-actions reg-full">
+        <button type="submit" class="btn-submit" [disabled]="loading">
+          <i class="bi" [ngClass]="loading ? 'bi-hourglass-split spin' : 'bi-person-plus-fill'"></i>
+          {{ loading ? 'Creando cuenta...' : 'Crear Cuenta' }}
+        </button>
+      </div>
+
+    </form>
+
+    <!-- Footer -->
+    <div class="reg-footer">
+      <p>¿Ya tienes cuenta? <a routerLink="/login">Iniciar sesión aquí</a></p>
+    </div>
+
+  </div>
+</div>

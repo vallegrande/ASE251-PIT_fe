@@ -1,0 +1,125 @@
+<div class="auth-split">
+
+  <!-- ═══ LEFT — BRAND PANEL ═══ -->
+  <aside class="brand-panel">
+    <div class="bg-orb bg-orb-1"></div>
+    <div class="bg-orb bg-orb-2"></div>
+    <div class="bg-orb bg-orb-3"></div>
+    <div class="bg-grid"></div>
+
+    <div class="brand-inner">
+
+      <div class="brand-logo-row">
+        <div class="brand-logo-icon">
+          <i class="bi bi-tree-fill"></i>
+        </div>
+        <span class="brand-pill">Sistema Agrícola</span>
+      </div>
+
+      <div class="brand-headline">
+        <h1>Arona<br><strong>Agrícola S.A.</strong></h1>
+        <p>Gestión inteligente de personal, parcelas y operaciones del campo.</p>
+      </div>
+
+      <div class="brand-cards">
+        <div class="brand-card">
+          <div class="brand-card-icon"><i class="bi bi-people-fill"></i></div>
+          <div>
+            <strong>Personal del Campo</strong>
+            <span>Encargados y administradores centralizados</span>
+          </div>
+        </div>
+        <div class="brand-card">
+          <div class="brand-card-icon"><i class="bi bi-shield-fill-check"></i></div>
+          <div>
+            <strong>Alertas Fitosanitarias</strong>
+            <span>Detección y seguimiento de amenazas</span>
+          </div>
+        </div>
+        <div class="brand-card">
+          <div class="brand-card-icon"><i class="bi bi-bar-chart-fill"></i></div>
+          <div>
+            <strong>Reportes en Tiempo Real</strong>
+            <span>Cosechas, envíos y producción</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="brand-footer-note">
+        <i class="bi bi-geo-alt-fill"></i>
+        Sociedad Agrícola Arona S.A. &mdash; Sistema interno
+      </div>
+
+    </div>
+  </aside>
+
+  <!-- ═══ RIGHT — FORM PANEL ═══ -->
+  <main class="form-panel">
+    <div class="form-card">
+
+      <div class="form-card-head">
+        <div class="form-card-logo">
+          <i class="bi bi-tree-fill"></i>
+        </div>
+        <h2>Bienvenido de vuelta</h2>
+        <p>Ingresa tus credenciales para acceder al sistema</p>
+      </div>
+
+      <form (ngSubmit)="onSubmit()" class="auth-form" autocomplete="on">
+
+        <div class="field">
+          <label for="login-correo">Correo electrónico</label>
+          <div class="field-wrap">
+            <i class="bi bi-envelope-fill field-icon"></i>
+            <input
+              id="login-correo"
+              type="email"
+              [(ngModel)]="correo"
+              name="correo"
+              placeholder="usuario@arona.com"
+              autocomplete="email"
+            />
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="login-pwd">Contraseña</label>
+          <div class="field-wrap">
+            <i class="bi bi-lock-fill field-icon"></i>
+            <input
+              id="login-pwd"
+              [type]="showPassword ? 'text' : 'password'"
+              [(ngModel)]="password"
+              name="password"
+              placeholder="••••••••"
+              autocomplete="current-password"
+            />
+            <button type="button" class="eye-btn" (click)="togglePassword()">
+              <i class="bi" [ngClass]="showPassword ? 'bi-eye-slash-fill' : 'bi-eye-fill'"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="field-row">
+          <label class="check-wrap">
+            <input type="checkbox" [(ngModel)]="remember" name="remember" />
+            <span class="check-box"></span>
+            <span class="check-text">Recordar sesión</span>
+          </label>
+        </div>
+
+        <button type="submit" class="btn-submit" [disabled]="loading">
+          <i class="bi" [ngClass]="loading ? 'bi-hourglass-split spin' : 'bi-box-arrow-in-right'"></i>
+          {{ loading ? 'Iniciando sesión...' : 'Iniciar Sesión' }}
+        </button>
+
+      </form>
+
+      <div class="form-card-foot">
+        <p>¿No tienes cuenta? <a routerLink="/register">Registrarse aquí</a></p>
+      </div>
+
+    </div>
+  </main>
+
+</div>

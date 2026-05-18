@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ApiService } from '../../../core/services/api.service';
-import { Alerta, AlertaRequest } from '../interfaces/alerta.interface';
+import { Alerta, AlertaRequest, EstadoAlerta } from '../interfaces/alerta.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -13,12 +13,17 @@ export class AlertasService {
     private readonly api: ApiService
   ) {}
 
-  list(estado = ''): Observable<Alerta[]> {
-    let params = new HttpParams();
-    if (estado.trim()) {
-      params = params.set('estado', estado);
-    }
+  list(estado?: EstadoAlerta): Observable<Alerta[]> {
+    const params = estado ? new HttpParams().set('estado', estado) : {};
     return this.http.get<Alerta[]>(this.api.endpoint('alertas'), { params });
+  }
+
+  getById(id: number): Observable<Alerta> {
+    return this.http.get<Alerta>(this.api.endpoint(`alertas/${id}`));
+  }
+
+  listByParcela(parcelaId: number): Observable<Alerta[]> {
+    return this.http.get<Alerta[]>(this.api.endpoint(`alertas/parcela/${parcelaId}`));
   }
 
   create(payload: AlertaRequest): Observable<Alerta> {
@@ -26,10 +31,14 @@ export class AlertasService {
   }
 
   atender(id: number): Observable<Alerta> {
-    return this.http.patch<Alerta>(this.api.endpoint(`alertas/${id}/atender`), {});
+    return this.http.patch<Alerta>(this.api.endpoint(`alertas/${id}/atender`), null);
   }
 
   descartar(id: number): Observable<Alerta> {
-    return this.http.patch<Alerta>(this.api.endpoint(`alertas/${id}/descartar`), {});
+    return this.http.patch<Alerta>(this.api.endpoint(`alertas/${id}/descartar`), null);
+  }
+
+  remove(id: number): Observable<void> {
+    return this.http.delete<void>(this.api.endpoint(`alertas/${id}`));
   }
 }

@@ -1,0 +1,44 @@
+<div class="table-wrapper">
+  <table>
+    <thead>
+      <tr>
+        <th>Parcela</th>
+        <th>Temperatura (°C)</th>
+        <th>Humedad (%)</th>
+        <th>Precipitación (mm)</th>
+        <th>Viento (km/h)</th>
+        <th>Estado</th>
+        <th>Fecha</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let m of monitoreos">
+        <td class="name-cell">
+          <i class="bi bi-geo-alt"></i>
+          {{ m.parcela.nombre || '-' }}
+        </td>
+        <td>
+          <span [class.valor-warning]="isTempWarning(m.temperatura)">
+            {{ m.temperatura !== null ? m.temperatura : '-' }}
+            <i class="bi bi-exclamation-circle-fill" *ngIf="isTempWarning(m.temperatura)"></i>
+          </span>
+        </td>
+        <td>
+          <span [class.valor-warning]="isHumedadWarning(m.humedad)">
+            {{ m.humedad !== null ? m.humedad : '-' }}
+            <i class="bi bi-exclamation-circle-fill" *ngIf="isHumedadWarning(m.humedad)"></i>
+          </span>
+        </td>
+        <td>{{ m.precipitacion !== null ? m.precipitacion : '-' }}</td>
+        <td>{{ m.velocidadViento !== null ? m.velocidadViento : '-' }}</td>
+        <td>
+          <span class="badge"
+                [ngClass]="m.estado === 'COMPLETADO' ? 'badge-success' : m.estado === 'PENDIENTE' ? 'badge-warning' : 'badge-neutral'">
+            {{ m.estado }}
+          </span>
+        </td>
+        <td>{{ formatDate(m.fechaMonitoreo) }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
