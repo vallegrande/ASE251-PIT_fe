@@ -21,9 +21,9 @@ export class ParcelaTableComponent {
 
   getEstadoClass(estado: Parcela['estado']): string {
     switch (estado) {
-      case 'ACTIVA': return 'badge-success';
-      case 'BAJO_MANTENIMIENTO': return 'badge-warning';
-      case 'INACTIVA': return 'badge-neutral';
+      case 'ACTIVO': return 'badge-success';
+      case 'EN_RIESGO': return 'badge-warning';
+      case 'INACTIVO': return 'badge-neutral';
       default: return 'badge-neutral';
     }
   }

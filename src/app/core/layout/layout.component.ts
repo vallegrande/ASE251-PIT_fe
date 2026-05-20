@@ -14,50 +14,13 @@ import { AuthUser } from '../../features/auth/interfaces/auth.interface';
   standalone: false
 })
 export class LayoutComponent {
-  sidebarCollapsed = false;
-  mobileMenuOpen = false;
+  sidebarOpen = false;
 
-  /** Elementos del menú de navegación */
-  readonly menuItems = [
-    { path: '/dashboard', icon: 'bi-grid-1x2-fill', label: 'Dashboard' },
-    { path: '/parcelas', icon: 'bi-map-fill', label: 'Parcelas' },
-    { path: '/monitoreo', icon: 'bi-thermometer-half', label: 'Monitoreo' },
-    { path: '/alertas', icon: 'bi-exclamation-triangle-fill', label: 'Alertas' }
-  ];
-
-  constructor(
-    private readonly authService: AuthService,
-    private readonly router: Router
-  ) {}
-
-  /** Obtiene el usuario autenticado */
-  get currentUser(): AuthUser | null {
-    return this.authService.getCurrentUser();
-  }
-
-  /** Alterna el sidebar en escritorio */
   toggleSidebar(): void {
-    this.sidebarCollapsed = !this.sidebarCollapsed;
+    this.sidebarOpen = !this.sidebarOpen;
   }
 
-  /** Alterna el menú en dispositivos móviles */
-  toggleMobileMenu(): void {
-    this.mobileMenuOpen = !this.mobileMenuOpen;
-  }
-
-  /** Cierra la sesión del usuario */
-  logout(): void {
-    this.authService.logout();
-    this.router.navigate(['/login']);
-  }
-
-  /** Obtiene las iniciales del nombre para el avatar */
-  getInitials(): string {
-    const name = this.currentUser?.nombreCompleto || 'U';
-    const parts = name.split(' ');
-    if (parts.length >= 2) {
-      return (parts[0][0] + parts[1][0]).toUpperCase();
-    }
-    return name.substring(0, 2).toUpperCase();
+  closeSidebar(): void {
+    this.sidebarOpen = false;
   }
 }

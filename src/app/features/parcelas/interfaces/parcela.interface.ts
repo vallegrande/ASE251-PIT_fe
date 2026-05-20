@@ -1,27 +1,27 @@
-import { Usuario } from '../../auth/interfaces/auth.interface';
-
-export type EstadoParcela = 'ACTIVA' | 'INACTIVA' | 'BAJO_MANTENIMIENTO';
+export type EstadoParcela = 'ACTIVO' | 'EN_RIESGO' | 'INACTIVO';
 
 export interface Parcela {
-  id?: number;
+  id: number;
   nombre: string;
+  area: number;
   ubicacion: string;
-  area: number; // FLOAT
-  tipoSuelo?: string;
-  cultivo?: string;
-  descripcion?: string;
   estado: EstadoParcela;
-  usuario: Usuario;
+  humedad?: number;
+  temperatura?: number;
+  fechaSiembra?: string;
+  fechaCosechaEstimada?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface ParcelaRequest {
   nombre: string;
   area: number;
   ubicacion: string;
-  tipoSuelo: string | null;
-  cultivo: string | null;
-  descripcion: string | null;
   estado: EstadoParcela;
-  usuario: { id: number } | null;
+  humedad?: number;
+  temperatura?: number;
+  fechaSiembra?: string;
+  fechaCosechaEstimada?: string;
 }
 

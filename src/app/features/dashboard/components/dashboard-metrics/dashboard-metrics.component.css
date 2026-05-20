@@ -1,11 +1,95 @@
 .metrics-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 1rem;
 }
 
-@media (max-width: 480px) {
-  .metrics-grid {
-    grid-template-columns: 1fr;
-  }
+/* ── Card base ── */
+.metric-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 1.25rem 1.35rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  transition: transform var(--transition-base),
+              box-shadow var(--transition-base),
+              border-color var(--transition-base);
+  cursor: default;
+}
+
+.metric-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: rgba(52,211,153,0.20);
+}
+
+/* ── Tone variants ── */
+.metric-card--success { border-left: 3px solid var(--success); }
+.metric-card--warning { border-left: 3px solid var(--warning); }
+.metric-card--danger  { border-left: 3px solid var(--danger); }
+
+/* ── Icon ── */
+.metric-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.metric-icon--default { background: rgba(94,114,104,0.15); color: var(--text-muted); }
+.metric-icon--success { background: var(--success-bg); color: var(--success); }
+.metric-icon--warning { background: var(--warning-bg); color: var(--warning); }
+.metric-icon--danger  { background: var(--danger-bg);  color: var(--danger); }
+.metric-icon--info    { background: var(--info-bg);    color: var(--info); }
+
+/* ── Body ── */
+.metric-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 0;
+}
+
+.metric-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.metric-value {
+  font-size: 1.85rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  display: flex;
+  align-items: baseline;
+  gap: 0.25rem;
+}
+
+.metric-value small {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  letter-spacing: 0;
+}
+
+.metric-value--success { color: var(--success); }
+.metric-value--warning { color: var(--warning); }
+.metric-value--danger  { color: var(--danger); }
+
+/* ── Responsive ── */
+@media (max-width: 640px) {
+  .metrics-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 400px) {
+  .metrics-grid { grid-template-columns: 1fr; }
 }

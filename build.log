@@ -1,0 +1,266 @@
+[33mÔØ»[39m Building...
+[32mÔ£ö[39m Building...
+Application bundle generation failed. [6.522 seconds] - 2026-05-20T07:01:49.488Z
+
+Ô£ÿ [ERROR] TS2367: This comparison appears to be unintentional because the types 'EstadoParcela' and '"ACTIVO"' have no overlap. [plugin angular-compiler]
+
+    src/app/features/parcelas/pages/parcelas-page/parcelas-page.component.html:216:34:
+      216 Ôöé                 'badge-active':   p.estado === 'ACTIVO',
+          ÔòÁ                                   ~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component ParcelasPageComponent.
+
+    src/app/features/parcelas/pages/parcelas-page/parcelas-page.component.ts:11:15:
+      11 Ôöé   templateUrl: './parcelas-page.component.html',
+         ÔòÁ                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Ô£ÿ [ERROR] TS2367: This comparison appears to be unintentional because the types 'EstadoParcela' and '"EN_RIESGO"' have no overlap. [plugin angular-compiler]
+
+    src/app/features/parcelas/pages/parcelas-page/parcelas-page.component.html:217:34:
+      217 Ôöé                 'badge-risk':     p.estado === 'EN_RIESGO',
+          ÔòÁ                                   ~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component ParcelasPageComponent.
+
+    src/app/features/parcelas/pages/parcelas-page/parcelas-page.component.ts:11:15:
+      11 Ôöé   templateUrl: './parcelas-page.component.html',
+         ÔòÁ                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Ô£ÿ [ERROR] TS2367: This comparison appears to be unintentional because the types 'EstadoParcela' and '"INACTIVO"' have no overlap. [plugin angular-compiler]
+
+    src/app/features/parcelas/pages/parcelas-page/parcelas-page.component.html:218:34:
+      218 Ôöé                 'badge-inactive': p.estado === 'INACTIVO'
+          ÔòÁ                                   ~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component ParcelasPageComponent.
+
+    src/app/features/parcelas/pages/parcelas-page/parcelas-page.component.ts:11:15:
+      11 Ôöé   templateUrl: './parcelas-page.component.html',
+         ÔòÁ                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Ô£ÿ [ERROR] TS2367: This comparison appears to be unintentional because the types 'EstadoParcela' and '"EN_RIESGO"' have no overlap. [plugin angular-compiler]
+
+    src/app/features/parcelas/pages/parcelas-page/parcelas-page.component.html:219:20:
+      219 Ôöé               }">{{ p.estado === 'EN_RIESGO' ? 'En riesgo' : p.es...
+          ÔòÁ                     ~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component ParcelasPageComponent.
+
+    src/app/features/parcelas/pages/parcelas-page/parcelas-page.component.ts:11:15:
+      11 Ôöé   templateUrl: './parcelas-page.component.html',
+         ÔòÁ                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Ô£ÿ [ERROR] TS2367: This comparison appears to be unintentional because the types 'EstadoParcela' and '"ACTIVO"' have no overlap. [plugin angular-compiler]
+
+    src/app/features/parcelas/pages/parcelas-page/parcelas-page.component.html:219:61:
+      219 Ôöé ...SGO' ? 'En riesgo' : p.estado === 'ACTIVO' ? 'Activo' : 'Inact...
+          ÔòÁ                         ~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component ParcelasPageComponent.
+
+    src/app/features/parcelas/pages/parcelas-page/parcelas-page.component.ts:11:15:
+      11 Ôöé   templateUrl: './parcelas-page.component.html',
+         ÔòÁ                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Ô£ÿ [ERROR] TS2339: Property 'fechaSiembra' does not exist on type 'Parcela'. [plugin angular-compiler]
+
+    src/app/features/parcelas/pages/parcelas-page/parcelas-page.component.html:226:28:
+      226 Ôöé               <span>­ƒî▒ {{ p.fechaSiembra ? (p.fechaSiembra | da...
+          ÔòÁ                          ~~~~~~~~~~~~
+
+  Error occurs in the template of component ParcelasPageComponent.
+
+    src/app/features/parcelas/pages/parcelas-page/parcelas-page.component.ts:11:15:
+      11 Ôöé   templateUrl: './parcelas-page.component.html',
+         ÔòÁ                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Ô£ÿ [ERROR] TS2339: Property 'fechaSiembra' does not exist on type 'Parcela'. [plugin angular-compiler]
+
+    src/app/features/parcelas/pages/parcelas-page/parcelas-page.component.html:226:46:
+      226 Ôöé ...´┐¢´┐¢´┐¢ {{ p.fechaSiembra ? (p.fechaSiembra | date:'dd/MM/yy') : '...
+          ÔòÁ                             ~~~~~~~~~~~~
+
+  Error occurs in the template of component ParcelasPageComponent.
+
+    src/app/features/parcelas/pages/parcelas-page/parcelas-page.component.ts:11:15:
+      11 Ôöé   templateUrl: './parcelas-page.component.html',
+         ÔòÁ                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Ô£ÿ [ERROR] TS2339: Property 'fechaCosechaEstimada' does not exist on type 'Parcela'. [plugin angular-compiler]
+
+    src/app/features/parcelas/pages/parcelas-page/parcelas-page.component.html:227:28:
+      227 Ôöé ...       <span>­ƒôà {{ p.fechaCosechaEstimada ? (p.fechaCosechaE...
+          ÔòÁ                      ~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component ParcelasPageComponent.
+
+    src/app/features/parcelas/pages/parcelas-page/parcelas-page.component.ts:11:15:
+      11 Ôöé   templateUrl: './parcelas-page.component.html',
+         ÔòÁ                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Ô£ÿ [ERROR] TS2339: Property 'fechaCosechaEstimada' does not exist on type 'Parcela'. [plugin angular-compiler]
+
+    src/app/features/parcelas/pages/parcelas-page/parcelas-page.component.html:227:54:
+      227 Ôöé ...haCosechaEstimada ? (p.fechaCosechaEstimada | date:'dd/MM/yy')...
+          ÔòÁ                         ~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component ParcelasPageComponent.
+
+    src/app/features/parcelas/pages/parcelas-page/parcelas-page.component.ts:11:15:
+      11 Ôöé   templateUrl: './parcelas-page.component.html',
+         ÔòÁ                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Ô£ÿ [ERROR] TS2339: Property 'humedad' does not exist on type 'Parcela'. [plugin angular-compiler]
+
+    src/app/features/parcelas/pages/parcelas-page/parcelas-page.component.html:230:29:
+      230 Ôöé               <span *ngIf="p.humedad !== null">­ƒÆº {{ p.humedad ...
+          ÔòÁ                              ~~~~~~~
+
+  Error occurs in the template of component ParcelasPageComponent.
+
+    src/app/features/parcelas/pages/parcelas-page/parcelas-page.component.ts:11:15:
+      11 Ôöé   templateUrl: './parcelas-page.component.html',
+         ÔòÁ                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Ô£ÿ [ERROR] TS2339: Property 'humedad' does not exist on type 'Parcela'. [plugin angular-compiler]
+
+    src/app/features/parcelas/pages/parcelas-page/parcelas-page.component.html:230:55:
+      230 Ôöé ...    <span *ngIf="p.humedad !== null">­ƒÆº {{ p.humedad }}%</span>
+          ÔòÁ                                              ~~~~~~~
+
+  Error occurs in the template of component ParcelasPageComponent.
+
+    src/app/features/parcelas/pages/parcelas-page/parcelas-page.component.ts:11:15:
+      11 Ôöé   templateUrl: './parcelas-page.component.html',
+         ÔòÁ                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Ô£ÿ [ERROR] TS2339: Property 'temperatura' does not exist on type 'Parcela'. [plugin angular-compiler]
+
+    src/app/features/parcelas/pages/parcelas-page/parcelas-page.component.html:231:29:
+      231 Ôöé               <span *ngIf="p.temperatura !== null">­ƒîí´©Å {{ p.t...
+          ÔòÁ                              ~~~~~~~~~~~
+
+  Error occurs in the template of component ParcelasPageComponent.
+
+    src/app/features/parcelas/pages/parcelas-page/parcelas-page.component.ts:11:15:
+      11 Ôöé   templateUrl: './parcelas-page.component.html',
+         ÔòÁ                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Ô£ÿ [ERROR] TS2339: Property 'temperatura' does not exist on type 'Parcela'. [plugin angular-compiler]
+
+    src/app/features/parcelas/pages/parcelas-page/parcelas-page.component.html:231:60:
+      231 Ôöé ...If="p.temperatura !== null">­ƒîí´©Å {{ p.temperatura }}┬░C</span>
+          ÔòÁ                                    ~~~~~~~~~~~
+
+  Error occurs in the template of component ParcelasPageComponent.
+
+    src/app/features/parcelas/pages/parcelas-page/parcelas-page.component.ts:11:15:
+      11 Ôöé   templateUrl: './parcelas-page.component.html',
+         ÔòÁ                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Ô£ÿ [ERROR] TS2339: Property 'humedad' does not exist on type 'Parcela'. [plugin angular-compiler]
+
+    src/app/features/parcelas/pages/parcelas-page/parcelas-page.component.html:232:29:
+      232 Ôöé               <span *ngIf="p.humedad === null && p.temperatura ==...
+          ÔòÁ                              ~~~~~~~
+
+  Error occurs in the template of component ParcelasPageComponent.
+
+    src/app/features/parcelas/pages/parcelas-page/parcelas-page.component.ts:11:15:
+      11 Ôöé   templateUrl: './parcelas-page.component.html',
+         ÔòÁ                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Ô£ÿ [ERROR] TS2339: Property 'temperatura' does not exist on type 'Parcela'. [plugin angular-compiler]
+
+    src/app/features/parcelas/pages/parcelas-page/parcelas-page.component.html:232:51:
+      232 Ôöé ...="p.humedad === null && p.temperatura === null" style="color:v...
+          ÔòÁ                              ~~~~~~~~~~~
+
+  Error occurs in the template of component ParcelasPageComponent.
+
+    src/app/features/parcelas/pages/parcelas-page/parcelas-page.component.ts:11:15:
+      11 Ôöé   templateUrl: './parcelas-page.component.html',
+         ÔòÁ                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Ô£ÿ [ERROR] TS2345: Argument of type 'number | undefined' is not assignable to parameter of type 'number'.
+  Type 'undefined' is not assignable to type 'number'. [plugin angular-compiler]
+
+    src/app/features/parcelas/pages/parcelas-page/parcelas-page.component.html:254:72:
+      254 Ôöé ...ss="btn-danger btn-icon" (click)="delete(p.id)" title="Eliminar">
+          ÔòÁ                                               ~~
+
+  Error occurs in the template of component ParcelasPageComponent.
+
+    src/app/features/parcelas/pages/parcelas-page/parcelas-page.component.ts:11:15:
+      11 Ôöé   templateUrl: './parcelas-page.component.html',
+         ÔòÁ                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Ô£ÿ [ERROR] TS2345: Argument of type 'number | undefined' is not assignable to parameter of type 'number'.
+  Type 'undefined' is not assignable to type 'number'. [plugin angular-compiler]
+
+    src/app/features/parcelas/pages/parcelas-page/parcelas-page.component.html:265:67:
+      265 Ôöé ...-secondary" (click)="restore(p.id)" style="color:var(--success)">
+          ÔòÁ                                   ~~
+
+  Error occurs in the template of component ParcelasPageComponent.
+
+    src/app/features/parcelas/pages/parcelas-page/parcelas-page.component.ts:11:15:
+      11 Ôöé   templateUrl: './parcelas-page.component.html',
+         ÔòÁ                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Ô£ÿ [ERROR] TS2339: Property 'onSearch' does not exist on type 'ParcelasPageComponent'. [plugin angular-compiler]
+
+    src/app/features/parcelas/pages/parcelas-page/parcelas-page.component.html:293:62:
+      293 Ôöé ...    placeholder="Buscar parcela..." (keyup.enter)="onSearch()" />
+          ÔòÁ                                                       ~~~~~~~~
+
+  Error occurs in the template of component ParcelasPageComponent.
+
+    src/app/features/parcelas/pages/parcelas-page/parcelas-page.component.ts:11:15:
+      11 Ôöé   templateUrl: './parcelas-page.component.html',
+         ÔòÁ                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Ô£ÿ [ERROR] TS2339: Property 'openCreate' does not exist on type 'ParcelasPageComponent'. [plugin angular-compiler]
+
+    src/app/features/parcelas/pages/parcelas-page/parcelas-page.component.html:295:43:
+      295 Ôöé       <button class="btn-primary" (click)="openCreate()">
+          ÔòÁ                                            ~~~~~~~~~~
+
+  Error occurs in the template of component ParcelasPageComponent.
+
+    src/app/features/parcelas/pages/parcelas-page/parcelas-page.component.ts:11:15:
+      11 Ôöé   templateUrl: './parcelas-page.component.html',
+         ÔòÁ                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Ô£ÿ [ERROR] TS2339: Property 'openEdit' does not exist on type 'ParcelasPageComponent'. [plugin angular-compiler]
+
+    src/app/features/parcelas/pages/parcelas-page/parcelas-page.component.html:370:19:
+      370 Ôöé     (editParcela)="openEdit($event)"
+          ÔòÁ                    ~~~~~~~~
+
+  Error occurs in the template of component ParcelasPageComponent.
+
+    src/app/features/parcelas/pages/parcelas-page/parcelas-page.component.ts:11:15:
+      11 Ôöé   templateUrl: './parcelas-page.component.html',
+         ÔòÁ                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+

@@ -1,74 +1,101 @@
-<div class="layout" [class.sidebar-collapsed]="sidebarCollapsed">
-  <!-- Overlay para móvil -->
-  <div class="mobile-overlay" [class.active]="mobileMenuOpen" (click)="toggleMobileMenu()"></div>
+<div class="layout">
+  <!-- ─── Overlay (mobile) ─── -->
+  <div class="sidebar-overlay" [class.visible]="sidebarOpen" (click)="closeSidebar()"></div>
 
-  <!-- Sidebar -->
-  <aside class="sidebar" [class.mobile-open]="mobileMenuOpen">
-    <!-- Brand -->
-    <div class="brand">
+  <!-- ─── Sidebar ─── -->
+  <aside class="sidebar" [class.open]="sidebarOpen">
+    <div class="sidebar-brand">
       <div class="brand-icon">
-        <i class="bi bi-flower2"></i>
+        <!-- Leaf / sprout icon -->
+        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24"
+             fill="none" stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 8c.7-1 1-2.2 1-3.5C18 2.5 16.5 1 14.5 1c-1 0-2 .5-2.5 1.2C11.5 1.5 10.5 1 9.5 1 7.5 1 6 2.5 6 4.5c0 1.3.3 2.5 1 3.5"/>
+          <path d="M12 22V10"/>
+          <path d="M7 15c-1.5-1-3-3.5-3-6 0 0 3-.5 5 1"/>
+          <path d="M17 15c1.5-1 3-3.5 3-6 0 0-3-.5-5 1"/>
+          <path d="M12 10c-2-1.5-5-1-5-1s.5 3 2 5"/>
+          <path d="M12 10c2-1.5 5-1 5-1s-.5 3-2 5"/>
+        </svg>
       </div>
       <div class="brand-text">
-        <h1>CAMOTE</h1>
-        <p>Riesgos Agrícolas</p>
+        <span class="brand-title">CamoteApp</span>
+        <span class="brand-subtitle">Monitoreo Agrícola</span>
       </div>
     </div>
 
-    <!-- Navigation -->
-    <nav class="nav">
-      <span class="nav-label">MENÚ PRINCIPAL</span>
-      <a *ngFor="let item of menuItems"
-         [routerLink]="item.path"
-         routerLinkActive="active"
-         (click)="mobileMenuOpen = false"
-         class="nav-item">
-        <i class="bi" [ngClass]="item.icon"></i>
-        <span class="nav-text">{{ item.label }}</span>
+    <nav class="sidebar-nav">
+      <a routerLink="/dashboard" routerLinkActive="active" class="nav-item" (click)="closeSidebar()">
+        <!-- Dashboard / grid icon -->
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+             fill="none" stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="7" height="7" rx="1"/>
+          <rect x="14" y="3" width="7" height="7" rx="1"/>
+          <rect x="3" y="14" width="7" height="7" rx="1"/>
+          <rect x="14" y="14" width="7" height="7" rx="1"/>
+        </svg>
+        <span>Dashboard</span>
+      </a>
+
+      <a routerLink="/parcelas" routerLinkActive="active" class="nav-item" (click)="closeSidebar()">
+        <!-- Layers / parcelas icon -->
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+             fill="none" stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="12 2 2 7 12 12 22 7 12 2"/>
+          <polyline points="2 17 12 22 22 17"/>
+          <polyline points="2 12 12 17 22 12"/>
+        </svg>
+        <span>Parcelas</span>
+      </a>
+
+      <a routerLink="/alertas" routerLinkActive="active" class="nav-item" (click)="closeSidebar()">
+        <!-- Bell / alertas icon -->
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+             fill="none" stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+          <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+        </svg>
+        <span>Alertas</span>
       </a>
     </nav>
 
-    <!-- User Info (bottom) -->
     <div class="sidebar-footer">
-      <div class="user-card" *ngIf="currentUser">
-        <div class="user-avatar">{{ getInitials() }}</div>
-        <div class="user-info">
-          <span class="user-name">{{ currentUser.nombreCompleto }}</span>
-          <span class="user-role">{{ currentUser.rol || 'SIN_ROL' }}</span>
-        </div>
-      </div>
-      <button class="logout-btn" (click)="logout()" title="Cerrar sesión">
-        <i class="bi bi-box-arrow-left"></i>
-        <span class="nav-text">Salir</span>
-      </button>
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor" stroke-width="2"
+           stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/>
+        <path d="M12 16v-4"/>
+        <path d="M12 8h.01"/>
+      </svg>
+      <span>CamoteApp v1.0</span>
     </div>
   </aside>
 
-  <!-- Main Content -->
+  <!-- ─── Main Content ─── -->
   <main class="main">
-    <!-- Header / Navbar -->
-    <header class="header">
-      <div class="header-left">
-        <button class="menu-toggle" (click)="toggleMobileMenu()">
-          <i class="bi bi-list"></i>
-        </button>
-        <button class="sidebar-toggle" (click)="toggleSidebar()">
-          <i class="bi" [ngClass]="sidebarCollapsed ? 'bi-chevron-right' : 'bi-chevron-left'"></i>
-        </button>
-        <div class="header-title">
-          <h1>Sistema de Monitoreo de Riesgos</h1>
-          <span class="header-subtitle">Chacra de Camote</span>
-        </div>
-      </div>
+    <header class="top-bar">
+      <!-- Hamburger button (mobile only) -->
+      <button class="hamburger" (click)="toggleSidebar()" aria-label="Abrir menú">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"
+             fill="none" stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round">
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <line x1="3" y1="12" x2="21" y2="12"/>
+          <line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+      </button>
 
-      <div class="header-right">
-        <div class="header-badge">
-          <i class="bi bi-circle-fill status-dot"></i>
-          Producción
-        </div>
-        <div class="header-user" *ngIf="currentUser">
-          <div class="header-avatar">{{ getInitials() }}</div>
-        </div>
+      <div class="top-bar-title">
+        <h2>Sistema de Monitoreo</h2>
+        <span class="top-bar-sep">—</span>
+        <span class="top-bar-sub">Chacra de Camote</span>
+      </div>
+      <div class="top-bar-status">
+        <span class="status-dot"></span>
+        En línea
       </div>
     </header>
 
@@ -78,3 +105,6 @@
     </section>
   </main>
 </div>
+
+<!-- Global Toasts -->
+<app-toast></app-toast>

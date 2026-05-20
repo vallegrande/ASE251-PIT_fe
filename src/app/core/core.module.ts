@@ -5,22 +5,11 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { LayoutComponent } from './layout/layout.component';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { ApiConfigInterceptor } from './interceptors/api-config.interceptor';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
   declarations: [LayoutComponent],
-  imports: [CommonModule, RouterModule],
-  exports: [LayoutComponent],
-  providers: [
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: ApiConfigInterceptor,
-      multi: true
-    },
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: AuthInterceptor,
-      multi: true
-    }
-  ]
+  imports: [CommonModule, RouterModule, SharedModule],
+  exports: [CommonModule, RouterModule, LayoutComponent, SharedModule]
 })
 export class CoreModule {}

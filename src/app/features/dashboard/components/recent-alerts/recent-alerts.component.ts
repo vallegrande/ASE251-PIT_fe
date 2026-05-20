@@ -12,7 +12,7 @@ export class RecentAlertsComponent {
 
   get recentAlertas(): Alerta[] {
     return [...this.alertas]
-      .sort((a, b) => new Date(b.fecha ?? '').getTime() - new Date(a.fecha ?? '').getTime())
+      .sort((a, b) => new Date(b.fechaAlerta ?? '').getTime() - new Date(a.fechaAlerta ?? '').getTime())
       .slice(0, 5);
   }
 

@@ -1,31 +1,67 @@
-<section class="dashboard-page animate-fade-in">
-  <!-- Page Header -->
+<div class="page">
+
+  <!-- ── Header ── -->
   <div class="page-header">
-    <h2><i class="bi bi-grid-1x2-fill"></i> Dashboard General</h2>
-    <button class="btn-primary" (click)="refresh()">
-      <i class="bi bi-arrow-clockwise"></i> Actualizar
+    <div class="page-header-left">
+      <h1>
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"
+             fill="none" stroke="var(--accent)" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="7" height="7" rx="1"/>
+          <rect x="14" y="3" width="7" height="7" rx="1"/>
+          <rect x="3" y="14" width="7" height="7" rx="1"/>
+          <rect x="14" y="14" width="7" height="7" rx="1"/>
+        </svg>
+        Panel de Control
+      </h1>
+      <p class="page-subtitle">Resumen general del estado de tus cultivos</p>
+    </div>
+    <div class="page-header-actions">
+      <button class="btn-secondary" (click)="loadSummary()" [disabled]="loading">
+        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"
+             fill="none" stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round"
+             [class.spinning]="loading">
+          <polyline points="23 4 23 10 17 10"/>
+          <polyline points="1 20 1 14 7 14"/>
+          <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10"/>
+          <path d="M20.49 15a9 9 0 0 1-14.85 3.36L1 14"/>
+        </svg>
+        Actualizar
+      </button>
+    </div>
+  </div>
+
+
+  <!-- ── Error ── -->
+  <div class="panel error-state" *ngIf="error && !loading">
+    <div class="error-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor" stroke-width="1.5"
+           stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/>
+        <line x1="12" y1="8" x2="12" y2="12"/>
+        <line x1="12" y1="16" x2="12.01" y2="16"/>
+      </svg>
+    </div>
+    <p class="error-message">{{ error }}</p>
+    <button class="btn-secondary" (click)="loadSummary()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor" stroke-width="2"
+           stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="23 4 23 10 17 10"/>
+        <polyline points="1 20 1 14 7 14"/>
+        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10"/>
+        <path d="M20.49 15a9 9 0 0 1-14.85 3.36L1 14"/>
+      </svg>
+      Reintentar
     </button>
   </div>
 
-  <!-- Loading -->
-  <app-loader *ngIf="loading" message="Cargando métricas del sistema..."></app-loader>
+  <!-- ── Metrics ── -->
+  <app-dashboard-metrics
+    *ngIf="summary"
+    [summary]="summary">
+  </app-dashboard-metrics>
 
-  <!-- Error -->
-  <p class="status error" *ngIf="error">
-    <i class="bi bi-exclamation-circle"></i> {{ error }}
-  </p>
-
-  <!-- Dashboard Content -->
-  <div *ngIf="!loading && !error">
-    <!-- Metric Cards -->
-    <app-dashboard-metrics [summary]="summary"></app-dashboard-metrics>
-
-    <!-- Charts Section -->
-    <div class="charts-section">
-      <app-dashboard-charts [alertas]="alertas"></app-dashboard-charts>
-    </div>
-
-    <!-- Recent Alerts -->
-    <app-recent-alerts [alertas]="alertas"></app-recent-alerts>
-  </div>
-</section>
+</div>

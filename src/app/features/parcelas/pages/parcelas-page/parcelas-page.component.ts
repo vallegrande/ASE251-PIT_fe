@@ -1,8 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Subject, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { Parcela, ParcelaRequest } from '../../interfaces/parcela.interface';
 import { ParcelasService } from '../../services/parcelas.service';
 import Swal from 'sweetalert2';
 import { HttpErrorService } from '../../../../core/services/http-error.service';
+import { ToastService } from '../../../../shared/components/toast/toast.service';
 
 @Component({
   selector: 'app-parcelas-page',
@@ -10,35 +13,86 @@ import { HttpErrorService } from '../../../../core/services/http-error.service';
   styleUrl: './parcelas-page.component.css',
   standalone: false
 })
-export class ParcelasPageComponent implements OnInit {
+export class ParcelasPageComponent implements OnInit, OnDestroy {
   parcelas: Parcela[] = [];
   searchQuery = '';
   loading = true;
   error: string | null = null;
   showForm = false;
   editingId: number | null = null;
+  isTrashMode = false;
+
+  private searchSubject = new Subject<string>();
+  private searchSub?: Subscription;
 
   readonly estados = [
-    { value: 'ACTIVA', label: 'Activa' },
-    { value: 'INACTIVA', label: 'Inactiva' },
-    { value: 'BAJO_MANTENIMIENTO', label: 'Bajo mantenimiento' }
+    { value: 'ACTIVO', label: 'Activo' },
+    { value: 'EN_RIESGO', label: 'En Riesgo' },
+    { value: 'INACTIVO', label: 'Inactivo' }
   ];
 
   model: ParcelaRequest = this.emptyModel();
 
   constructor(
     private readonly parcelasService: ParcelasService,
-    private readonly httpErrorService: HttpErrorService
+    private readonly httpErrorService: HttpErrorService,
+    private readonly toastService: ToastService
   ) {}
 
   ngOnInit(): void {
+    // Debounce 300ms en el buscador
+    this.searchSub = this.searchSubject.pipe(
+      debounceTime(300),
+      distinctUntilChanged()
+    ).subscribe(() => this.load());
+
     this.load();
   }
 
-  load(): void {
-    this.loading = true;
+  ngOnDestroy(): void {
+    this.searchSub?.unsubscribe();
+    this.searchSubject.complete();
+  }
+
+  onSearchChange(value: string): void {
+    this.searchQuery = value;
+    this.searchSubject.next(value);
+  }
+
+  toggleTrashMode(): void {
+    this.isTrashMode = !this.isTrashMode;
+    this.showForm = false;
+    this.editingId = null;
+    this.load();
+  }
+
+  showCreateForm(): void {
+    this.showForm = true;
+    this.editingId = null;
     this.error = null;
-    this.parcelasService.list().subscribe({
+    this.model = this.emptyModel();
+  }
+
+  hideForm(): void {
+    this.showForm = false;
+    this.editingId = null;
+    this.error = null;
+    this.model = this.emptyModel();
+  }
+
+  load(): void {
+    this.error = null;
+    this.loading = true;
+    
+    const filtros: any = {};
+    if (this.searchQuery?.trim()) {
+      filtros.nombre = this.searchQuery.trim();
+    }
+    if (this.isTrashMode) {
+      filtros.deleted = true;
+    }
+
+    this.parcelasService.list(filtros).subscribe({
       next: (response) => {
         this.parcelas = response;
         this.loading = false;
@@ -46,52 +100,14 @@ export class ParcelasPageComponent implements OnInit {
       error: (err) => {
         this.error = this.httpErrorService.toMessage(err, 'No se pudo cargar la lista de parcelas.');
         this.loading = false;
+        this.parcelas = [];
       }
     });
-  }
-
-  onSearch(): void {
-    if (!this.searchQuery.trim()) {
-      this.load();
-      return;
-    }
-    this.loading = true;
-    this.parcelasService.list({ nombre: this.searchQuery }).subscribe({
-      next: (response) => {
-        this.parcelas = response;
-        this.loading = false;
-      },
-      error: (err) => {
-        this.error = this.httpErrorService.toMessage(err, 'Error al buscar parcelas.');
-        this.loading = false;
-      }
-    });
-  }
-
-  openCreate(): void {
-    this.editingId = null;
-    this.model = this.emptyModel();
-    this.showForm = true;
-  }
-
-  openEdit(parcela: Parcela): void {
-    this.editingId = parcela.id ?? null;
-    this.model = {
-      nombre: parcela.nombre,
-      area: parcela.area,
-      ubicacion: parcela.ubicacion,
-      tipoSuelo: parcela.tipoSuelo ?? null,
-      cultivo: parcela.cultivo ?? null,
-      descripcion: parcela.descripcion ?? null,
-      estado: parcela.estado,
-      usuario: (parcela.usuario && parcela.usuario.id) ? { id: parcela.usuario.id } : null
-    };
-    this.showForm = true;
   }
 
   save(): void {
-    if (!this.model.nombre.trim() || !this.model.ubicacion.trim() || this.model.area <= 0) {
-      Swal.fire({ icon: 'warning', title: 'Campos requeridos', text: 'Completa nombre, ubicación y área.', confirmButtonColor: '#059669' });
+    if (!this.model.nombre?.trim() || !this.model.ubicacion?.trim() || this.model.area <= 0) {
+      this.toastService.warning('Campos requeridos', 'Completa nombre, ubicación y área.');
       return;
     }
 
@@ -101,15 +117,30 @@ export class ParcelasPageComponent implements OnInit {
 
     action.subscribe({
       next: () => {
-        Swal.fire({ icon: 'success', title: this.editingId ? 'Parcela actualizada' : 'Parcela creada', timer: 1500, showConfirmButton: false, timerProgressBar: true });
-        this.showForm = false;
-        this.model = this.emptyModel();
+        this.toastService.success(this.editingId ? 'Parcela actualizada' : 'Parcela creada');
+        this.hideForm();
         this.load();
       },
       error: (err) => {
-        Swal.fire({ icon: 'error', title: 'Error', text: this.httpErrorService.toMessage(err, 'No se pudo guardar la parcela.'), confirmButtonColor: '#059669' });
+        this.toastService.error('Error', this.httpErrorService.toMessage(err, 'No se pudo guardar la parcela.'));
       }
     });
+  }
+
+  edit(parcela: Parcela): void {
+    this.showForm = true;
+    this.editingId = parcela.id ?? null;
+    this.error = null;
+    this.model = {
+      nombre: parcela.nombre,
+      area: parcela.area,
+      ubicacion: parcela.ubicacion,
+      estado: parcela.estado,
+      humedad: parcela.humedad,
+      temperatura: parcela.temperatura,
+      fechaSiembra: parcela.fechaSiembra,
+      fechaCosechaEstimada: parcela.fechaCosechaEstimada
+    };
   }
 
   delete(id: number): void {
@@ -126,13 +157,25 @@ export class ParcelasPageComponent implements OnInit {
       if (result.isConfirmed) {
         this.parcelasService.remove(id).subscribe({
           next: () => {
-            Swal.fire({ icon: 'success', title: 'Parcela eliminada', timer: 1500, showConfirmButton: false });
+            this.toastService.success('Parcela eliminada');
             this.load();
           },
           error: (err) => {
-            Swal.fire({ icon: 'error', title: 'Error', text: this.httpErrorService.toMessage(err, 'No se pudo eliminar la parcela.'), confirmButtonColor: '#059669' });
+            this.toastService.error('Error', this.httpErrorService.toMessage(err, 'No se pudo eliminar la parcela.'));
           }
         });
+      }
+    });
+  }
+
+  restore(id: number): void {
+    this.parcelasService.restore(id).subscribe({
+      next: () => {
+        this.toastService.success('Parcela restaurada');
+        this.load();
+      },
+      error: (err) => {
+        this.toastService.error('Error', this.httpErrorService.toMessage(err, 'No se pudo restaurar la parcela.'));
       }
     });
   }
@@ -146,13 +189,9 @@ export class ParcelasPageComponent implements OnInit {
   private emptyModel(): ParcelaRequest {
     return {
       nombre: '',
-      area: 0,
+      area: 0.1,
       ubicacion: '',
-      tipoSuelo: null,
-      cultivo: null,
-      descripcion: null,
-      estado: 'ACTIVA',
-      usuario: null
+      estado: 'ACTIVO'
     };
   }
 }

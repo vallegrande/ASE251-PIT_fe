@@ -29,6 +29,12 @@
           "options": {
             "browser": "src/main.ts",
             "tsConfig": "tsconfig.app.json",
+            "polyfills": [
+              "zone.js"
+            ],
+            "allowedCommonJsDependencies": [
+              "sweetalert2"
+            ],
             "assets": [
               {
                 "glob": "**/*",
@@ -70,7 +76,8 @@
               "buildTarget": "camoteApp:build:production"
             },
             "development": {
-              "buildTarget": "camoteApp:build:development"
+              "buildTarget": "camoteApp:build:development",
+              "proxyConfig": "proxy.conf.json"
             }
           },
           "defaultConfiguration": "development"

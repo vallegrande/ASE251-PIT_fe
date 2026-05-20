@@ -40,7 +40,7 @@ export class DashboardChartsComponent implements AfterViewInit, OnChanges {
 
     const niveles = { BAJA: 0, MEDIA: 0, ALTA: 0, CRITICA: 0 };
     this.alertas.forEach(a => {
-      const nivel = a.nivelRiesgo as keyof typeof niveles;
+      const nivel = a.nivel as keyof typeof niveles;
       if (nivel in niveles) niveles[nivel]++;
     });
 

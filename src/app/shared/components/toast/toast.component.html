@@ -1,0 +1,15 @@
+<div class="toast-container">
+  <div *ngFor="let toast of toasts" class="toast-item toast-{{toast.type}}">
+    <div class="toast-icon">
+      <i class="bi bi-check-circle-fill" *ngIf="toast.type === 'success'"></i>
+      <i class="bi bi-x-circle-fill" *ngIf="toast.type === 'error'"></i>
+      <i class="bi bi-info-circle-fill" *ngIf="toast.type === 'info'"></i>
+      <i class="bi bi-exclamation-triangle-fill" *ngIf="toast.type === 'warning'"></i>
+    </div>
+    <div class="toast-content">
+      <h4 class="toast-title">{{ toast.title }}</h4>
+      <p class="toast-message" *ngIf="toast.message">{{ toast.message }}</p>
+    </div>
+    <button class="toast-close" (click)="close(toast.id)">&times;</button>
+  </div>
+</div>

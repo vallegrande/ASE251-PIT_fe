@@ -13,17 +13,21 @@ export class ParcelasService {
     private readonly api: ApiService
   ) {}
 
-  list(filtros?: { nombre?: string; estado?: EstadoParcela }): Observable<Parcela[]> {
-    if (filtros?.nombre?.trim()) {
-      const params = new HttpParams().set('nombre', filtros.nombre.trim());
-      return this.http.get<Parcela[]>(this.api.endpoint('parcelas/buscar'), { params });
+  list(filtros?: { nombre?: string; estado?: EstadoParcela; deleted?: boolean }): Observable<Parcela[]> {
+    let params = new HttpParams();
+    
+    if (filtros?.deleted) {
+      params = params.set('deleted', 'true');
+    } else {
+      if (filtros?.nombre?.trim()) {
+        params = params.set('nombre', filtros.nombre.trim());
+      }
+      if (filtros?.estado) {
+        params = params.set('estado', filtros.estado);
+      }
     }
 
-    if (filtros?.estado) {
-      return this.http.get<Parcela[]>(this.api.endpoint(`parcelas/estado/${filtros.estado}`));
-    }
-
-    return this.http.get<Parcela[]>(this.api.endpoint('parcelas'));
+    return this.http.get<Parcela[]>(this.api.endpoint('parcelas'), { params });
   }
 
   getById(id: number): Observable<Parcela> {
@@ -55,12 +59,16 @@ export class ParcelasService {
     return this.http.delete<void>(this.api.endpoint(`parcelas/${id}`));
   }
 
+  restore(id: number): Observable<void> {
+    return this.http.patch<void>(this.api.endpoint(`parcelas/${id}/restaurar`), {});
+  }
+
   estadoLabel(estado: EstadoParcela): string {
-    switch (estado) {
-      case 'ACTIVA': return 'Activa';
-      case 'INACTIVA': return 'Inactiva';
-      case 'BAJO_MANTENIMIENTO': return 'Bajo mantenimiento';
-      default: return estado;
-    }
+    const labels: Record<EstadoParcela, string> = {
+      'ACTIVO': 'Activo',
+      'EN_RIESGO': 'En Riesgo',
+      'INACTIVO': 'Inactivo'
+    };
+    return labels[estado] || estado;
   }
 }

@@ -21,17 +21,17 @@
             </span>
           </td>
           <td>
-            <span class="badge" [ngClass]="getNivelClass(alerta.nivelRiesgo)">
-              {{ getNivelLabel(alerta.nivelRiesgo) }}
+            <span class="badge" [ngClass]="getNivelClass(alerta.nivel)">
+              {{ getNivelLabel(alerta.nivel) }}
             </span>
           </td>
-          <td>{{ alerta.parcela.nombre || '-' }}</td>
+          <td>{{ alerta.parcelaNombre || '-' }}</td>
           <td>
             <span class="badge" [ngClass]="alerta.estado === 'PENDIENTE' ? 'badge-warning' : 'badge-neutral'">
               {{ alerta.estado }}
             </span>
           </td>
-          <td>{{ formatDate(alerta.fecha) }}</td>
+          <td>{{ formatDate(alerta.fechaAlerta) }}</td>
         </tr>
       </tbody>
     </table>

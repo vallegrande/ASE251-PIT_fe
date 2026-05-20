@@ -10,6 +10,19 @@ export class HttpErrorService {
       return fallback;
     }
 
+    // For 400 Bad Request, check for field-level validation errors (errores object)
+    if (error.status === 400 && error.error && typeof error.error === 'object') {
+      const errores = error.error.errores;
+      if (errores && typeof errores === 'object') {
+        const fieldErrors = Object.entries(errores)
+          .map(([field, message]) => `${field}: ${message}`)
+          .join('. ');
+        if (fieldErrors) {
+          return fieldErrors;
+        }
+      }
+    }
+
     const backendMessage = this.getBackendMessage(error);
     if (backendMessage) {
       return backendMessage;
@@ -17,7 +30,7 @@ export class HttpErrorService {
 
     switch (error.status) {
       case 0:
-        return 'No se pudo conectar con el backend. Verifica que Spring Boot esté activo en http://localhost:8085.';
+        return 'No se pudo conectar con el backend. Verifica que Spring Boot esté activo en http://localhost:8080.';
       case 400:
         return 'La solicitud tiene datos inválidos. Revisa los campos e inténtalo nuevamente.';
       case 401:

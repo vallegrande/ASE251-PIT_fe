@@ -1,88 +1,291 @@
-<section class="animate-fade-in">
-  <!-- Header -->
+<div class="page">
+
+  <!-- ══ Header ══ -->
   <div class="page-header">
-    <h2><i class="bi bi-map-fill"></i> Gestión de Parcelas</h2>
-    <div class="header-actions">
-      <div class="search-box">
-        <i class="bi bi-search"></i>
-        <input type="text" [(ngModel)]="searchQuery" name="search"
-               placeholder="Buscar parcela..." (keyup.enter)="onSearch()" />
-      </div>
-      <button class="btn-primary" (click)="openCreate()">
-        <i class="bi bi-plus-lg"></i> Nueva Parcela
+    <div class="page-header-left">
+      <h2>
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+             fill="none" stroke="var(--accent)" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="12 2 2 7 12 12 22 7 12 2"/>
+          <polyline points="2 17 12 22 22 17"/>
+          <polyline points="2 12 12 17 22 12"/>
+        </svg>
+        Gestión de Parcelas
+      </h2>
+      <p class="page-subtitle">Administra tus campos, áreas de cultivo y estado general.</p>
+    </div>
+    <div class="page-header-actions">
+      <button *ngIf="!isTrashMode && !showForm" class="btn-primary" (click)="showCreateForm()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"
+             fill="none" stroke="currentColor" stroke-width="2.5"
+             stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+        Nueva Parcela
+      </button>
+      <button class="btn-secondary" (click)="toggleTrashMode()">
+        <svg *ngIf="!isTrashMode" xmlns="http://www.w3.org/2000/svg" width="15" height="15"
+             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
+          <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+        </svg>
+        <svg *ngIf="isTrashMode" xmlns="http://www.w3.org/2000/svg" width="15" height="15"
+             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="1 4 1 10 7 10"/>
+          <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+        </svg>
+        {{ isTrashMode ? 'Volver' : 'Papelera' }}
       </button>
     </div>
   </div>
 
-  <!-- Create / Edit Form -->
-  <div class="panel form-panel" *ngIf="showForm">
-    <h3>
-      <i class="bi" [ngClass]="editingId ? 'bi-pencil-square' : 'bi-plus-circle'"></i>
-      {{ editingId ? 'Editar Parcela' : 'Nueva Parcela' }}
-    </h3>
-
-    <form (ngSubmit)="save()" class="create-form">
-      <label>
-        Nombre *
-        <input type="text" [(ngModel)]="model.nombre" name="nombre" placeholder="Nombre de la parcela" required />
-      </label>
-
-      <label>
-        Ubicación *
-        <input type="text" [(ngModel)]="model.ubicacion" name="ubicacion" placeholder="Ubicación geográfica" required />
-      </label>
-
-      <label>
-        Área (ha) *
-        <input type="number" min="0.01" step="0.01" [(ngModel)]="model.area" name="area" required />
-      </label>
-
-      <label>
-        Estado
-        <select [(ngModel)]="model.estado" name="estado" required>
-          <option *ngFor="let estado of estados" [value]="estado.value">{{ estado.label }}</option>
-        </select>
-      </label>
-
-      <label>
-        Tipo de Suelo
-        <input type="text" [(ngModel)]="model.tipoSuelo" name="tipoSuelo" placeholder="Ej: Franco arenoso" />
-      </label>
-
-      <label>
-        Cultivo
-        <input type="text" [(ngModel)]="model.cultivo" name="cultivo" placeholder="Ej: Camote" />
-      </label>
-
-      <label class="full-width">
-        Descripción
-        <textarea [(ngModel)]="model.descripcion" name="descripcion" rows="2" placeholder="Detalles adicionales de la parcela"></textarea>
-      </label>
-
-      <div class="form-actions full-width">
-        <button type="submit" class="btn-primary">
-          <i class="bi bi-check-lg"></i> {{ editingId ? 'Actualizar' : 'Guardar' }}
-        </button>
-        <button type="button" class="btn-secondary" (click)="cancelForm()">
-          <i class="bi bi-x-lg"></i> Cancelar
-        </button>
-      </div>
-    </form>
+  <!-- ══ Search (solo modo activo) ══ -->
+  <div *ngIf="!isTrashMode" class="toolbar">
+    <div class="search-box">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+           fill="none" stroke="var(--text-muted)" stroke-width="2"
+           stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+      <input type="text" [(ngModel)]="searchQuery" (ngModelChange)="onSearchChange($event)"
+             name="searchQuery" placeholder="Buscar por nombre…"
+             autocomplete="off" />
+    </div>
   </div>
 
-  <!-- Loading -->
-  <app-loader *ngIf="loading" message="Cargando parcelas..."></app-loader>
+  <!-- ══ Side Drawer para crear / editar ══ -->
+  <div class="drawer-overlay" [class.open]="showForm" (click)="hideForm()"></div>
+  <div class="drawer-panel" [class.open]="showForm">
+    <div class="drawer-header">
+      <h3>
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+             fill="none" stroke="var(--accent)" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round">
+          <path *ngIf="!editingId" d="M12 5v14"/><path *ngIf="!editingId" d="M5 12h14"/>
+          <path *ngIf="editingId" d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
+        </svg>
+        {{ editingId ? 'Editar Parcela' : 'Nueva Parcela' }}
+      </h3>
+      <button type="button" class="drawer-close" (click)="hideForm()" title="Cerrar">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+             fill="none" stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
 
-  <!-- Error -->
-  <p class="status error" *ngIf="error">
-    <i class="bi bi-exclamation-circle"></i> {{ error }}
-  </p>
+    <div class="drawer-body">
+      <!-- Error inline -->
+      <div *ngIf="error" class="inline-error">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+             fill="none" stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="8" x2="12" y2="12"/>
+          <line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        {{ error }}
+      </div>
 
-  <!-- Table -->
-  <app-parcela-table
-    *ngIf="!loading"
-    [parcelas]="parcelas"
-    (deleteParcela)="delete($event)"
-    (editParcela)="openEdit($event)"
-  ></app-parcela-table>
-</section>
+      <form id="parcelaForm" (ngSubmit)="save()">
+        <div class="form-grid" style="grid-template-columns: 1fr;">
+          <label>
+            Nombre
+            <input type="text" [(ngModel)]="model.nombre" name="nombre"
+                   required placeholder="Ej. Lote Sur" />
+          </label>
+          <label>
+            Área (ha)
+            <input type="number" min="0.01" step="0.01"
+                   [(ngModel)]="model.area" name="area" required />
+          </label>
+          <label>
+            Ubicación
+            <input type="text" [(ngModel)]="model.ubicacion" name="ubicacion"
+                   required placeholder="Coordenadas o referencia" />
+          </label>
+          <label>
+            Humedad (%)
+            <input type="number" min="0" max="100" step="0.1"
+                   [(ngModel)]="model.humedad" name="humedad"
+                   placeholder="0-100" />
+          </label>
+          <label>
+            Temperatura (°C)
+            <input type="number" step="0.1"
+                   [(ngModel)]="model.temperatura" name="temperatura"
+                   placeholder="Ej. 22.5" />
+          </label>
+          <label>
+            Estado
+            <select [(ngModel)]="model.estado" name="estado" required>
+              <option *ngFor="let e of estados" [value]="e.value">{{ e.label }}</option>
+            </select>
+          </label>
+          <label>
+            Fecha de siembra
+            <input type="date" [(ngModel)]="model.fechaSiembra" name="fechaSiembra" />
+          </label>
+          <label>
+            Fecha de cosecha estimada
+            <input type="date" [(ngModel)]="model.fechaCosechaEstimada" name="fechaCosechaEstimada" />
+          </label>
+        </div>
+      </form>
+    </div>
+
+    <div class="drawer-footer">
+      <button type="button" class="btn-ghost" (click)="hideForm()">Cancelar</button>
+      <button type="submit" form="parcelaForm" class="btn-primary">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+             fill="none" stroke="currentColor" stroke-width="2.5"
+             stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+        {{ editingId ? 'Actualizar' : 'Guardar' }}
+      </button>
+    </div>
+  </div>
+
+  <!-- ══ Tabla / contenido ══ -->
+  <div class="panel">
+
+    <!-- Papelera header -->
+    <div *ngIf="isTrashMode" class="trash-header">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor" stroke-width="2"
+           stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
+        <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+      </svg>
+      Papelera de reciclaje
+    </div>
+
+    <!-- Error -->
+    <div *ngIf="error && !showForm" class="error-state">
+      <div class="error-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24"
+             fill="none" stroke="currentColor" stroke-width="1.5"
+             stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="8" x2="12" y2="12"/>
+          <line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+      </div>
+      <p class="error-message">{{ error }}</p>
+      <button class="btn-secondary" (click)="load()">Reintentar</button>
+    </div>
+
+    <!-- Vacío -->
+    <div *ngIf="!error && parcelas.length === 0" class="empty-state">
+      <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor" stroke-width="1.5"
+           stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="18" height="18" rx="2"/>
+        <line x1="3" y1="9" x2="21" y2="9"/>
+        <line x1="9" y1="21" x2="9" y2="9"/>
+      </svg>
+      <p class="empty-title">Sin parcelas</p>
+      <p>{{ isTrashMode ? 'La papelera está vacía.' : 'Aún no tienes parcelas registradas.' }}</p>
+      <button *ngIf="!isTrashMode" class="btn-primary" (click)="showCreateForm()" style="margin-top:0.5rem">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+             fill="none" stroke="currentColor" stroke-width="2.5"
+             stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+        Añadir primera parcela
+      </button>
+    </div>
+
+    <!-- Tabla -->
+    <div class="table-wrap" *ngIf="!error && parcelas.length > 0">
+      <table>
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Estado</th>
+            <th>Área</th>
+            <th>Ubicación</th>
+            <th>Siembra / Cosecha</th>
+            <th>Condiciones</th>
+            <th style="text-align:right">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let p of parcelas; let i = index" class="animate-fade-in"
+              [style.animation-delay]="(i * 0.05) + 's'">
+            <td><strong style="color:var(--text-primary)">{{ p.nombre }}</strong></td>
+            <td>
+              <span class="badge" [ngClass]="{
+                'badge-active':   p.estado === 'ACTIVO',
+                'badge-risk':     p.estado === 'EN_RIESGO',
+                'badge-inactive': p.estado === 'INACTIVO'
+              }">{{ p.estado === 'EN_RIESGO' ? 'En Riesgo' : p.estado === 'ACTIVO' ? 'Activo' : 'Inactivo' }}</span>
+            </td>
+            <td>{{ p.area }} ha</td>
+            <td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">
+              {{ p.ubicacion }}
+            </td>
+            <td class="cell-dates">
+              <span>📅 {{ p.fechaSiembra ? (p.fechaSiembra | date:'dd/MM/yy') : '—' }}</span>
+              <span>🌾 {{ p.fechaCosechaEstimada ? (p.fechaCosechaEstimada | date:'dd/MM/yy') : '—' }}</span>
+            </td>
+            <td class="cell-conditions">
+              <span>💧 {{ p.humedad !== null && p.humedad !== undefined ? (p.humedad + '%') : '—' }}</span>
+              <span>🌡️ {{ p.temperatura !== null && p.temperatura !== undefined ? (p.temperatura + '°C') : '—' }}</span>
+            </td>
+            <td>
+              <div class="row-actions">
+                <ng-container *ngIf="!isTrashMode">
+                  <button class="btn-secondary btn-icon" (click)="edit(p)" title="Editar">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2"
+                         stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
+                    </svg>
+                  </button>
+                  <a [routerLink]="['/alertas']" [queryParams]="{ parcelaId: p.id! }"
+                     class="btn-secondary btn-icon" title="Ver alertas"
+                     style="color:var(--warning);border-color:rgba(245,158,11,0.3)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2"
+                         stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                      <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                    </svg>
+                  </a>
+                  <button class="btn-danger btn-icon" (click)="delete(p.id!)" title="Eliminar">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2"
+                         stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M3 6h18"/>
+                      <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
+                      <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+                    </svg>
+                  </button>
+                </ng-container>
+                <ng-container *ngIf="isTrashMode">
+                  <button class="btn-secondary" (click)="restore(p.id!)" style="color:var(--success)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2"
+                         stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="1 4 1 10 7 10"/>
+                      <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+                    </svg>
+                    Restaurar
+                  </button>
+                </ng-container>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+

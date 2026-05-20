@@ -5,10 +5,9 @@
         <th>Nombre</th>
         <th>Ubicación</th>
         <th>Área (ha)</th>
-        <th>Cultivo</th>
-        <th>Tipo de Suelo</th>
+        <th>Humedad</th>
+        <th>Temperatura</th>
         <th>Estado</th>
-        <th>Usuario</th>
         <th>Acciones</th>
       </tr>
     </thead>
@@ -20,14 +19,13 @@
         </td>
         <td>{{ parcela.ubicacion }}</td>
         <td>{{ parcela.area | number : '1.1-2' }}</td>
-        <td>{{ parcela.cultivo || '-' }}</td>
-        <td>{{ parcela.tipoSuelo || '-' }}</td>
+        <td>{{ parcela.humedad !== null && parcela.humedad !== undefined ? (parcela.humedad + '%') : '—' }}</td>
+        <td>{{ parcela.temperatura !== null && parcela.temperatura !== undefined ? (parcela.temperatura + '°C') : '—' }}</td>
         <td>
           <span class="badge" [ngClass]="getEstadoClass(parcela.estado)">
             {{ getEstadoLabel(parcela.estado) }}
           </span>
         </td>
-        <td>{{ parcela.usuario.nombreCompleto || '-' }}</td>
         <td>
           <div class="action-buttons">
             <button class="btn-icon btn-secondary" title="Editar" (click)="editParcela.emit(parcela)">

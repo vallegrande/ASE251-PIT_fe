@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { Alerta, AlertaRequest } from '../../interfaces/alerta.interface';
 import { AlertasService } from '../../services/alertas.service';
 import { Parcela } from '../../../parcelas/interfaces/parcela.interface';
 import { ParcelasService } from '../../../parcelas/services/parcelas.service';
 import Swal from 'sweetalert2';
 import { HttpErrorService } from '../../../../core/services/http-error.service';
+import { ToastService } from '../../../../shared/components/toast/toast.service';
 
 @Component({
   selector: 'app-alertas-page',
@@ -15,116 +17,150 @@ import { HttpErrorService } from '../../../../core/services/http-error.service';
 export class AlertasPageComponent implements OnInit {
   alertas: Alerta[] = [];
   parcelas: Parcela[] = [];
+  estadoFiltro = '';
+  parcelaIdFiltro: number | undefined;
+  isTrashMode = false;
   loading = true;
   error: string | null = null;
   showForm = false;
 
-  readonly tipos = ['PLAGA', 'SEQUIA', 'LLUVIA_INTENSA', 'CALOR_EXCESIVO', 'HUMEDAD_BAJA', 'ENFERMEDAD', 'OTRO'];
+  readonly tipos = ['PLAGA', 'SEQUIA', 'LLUVIA_INTENSA', 'TEMPERATURA', 'OTRO'];
   readonly niveles = ['BAJA', 'MEDIA', 'ALTA', 'CRITICA'];
 
   model: AlertaRequest = {
-    parcela: { id: 0 },
+    parcelaId: 0,
     tipo: 'PLAGA',
-    nivelRiesgo: 'MEDIA',
-    mensaje: ''
+    nivel: 'MEDIA',
+    descripcion: ''
   };
 
   constructor(
     private readonly alertasService: AlertasService,
     private readonly parcelasService: ParcelasService,
-    private readonly httpErrorService: HttpErrorService
+    private readonly httpErrorService: HttpErrorService,
+    private readonly route: ActivatedRoute,
+    private readonly toastService: ToastService
   ) {}
 
   ngOnInit(): void {
-    this.load();
+    this.route.queryParams.subscribe(params => {
+      if (params['parcelaId']) {
+        this.parcelaIdFiltro = Number(params['parcelaId']);
+      }
+      this.load();
+    });
     this.loadParcelas();
+  }
+
+  toggleTrashMode(): void {
+    this.isTrashMode = !this.isTrashMode;
+    this.load();
   }
 
   load(): void {
     this.loading = true;
     this.error = null;
-    this.alertasService.list().subscribe({
+    this.alertasService.list(this.estadoFiltro, this.isTrashMode, this.parcelaIdFiltro).subscribe({
       next: (response) => {
         this.alertas = response;
         this.loading = false;
       },
       error: (err) => {
-        this.error = this.httpErrorService.toMessage(err, 'No se pudo cargar la lista de alertas.');
+        if (err?.status === 0) {
+          this.error = 'No se pudo conectar con el servidor. Verifica que el backend esté corriendo.';
+        } else {
+          this.error = 'No se pudo cargar la lista de alertas.';
+        }
         this.loading = false;
       }
     });
+  }
+
+  clearParcelaFilter(): void {
+    this.parcelaIdFiltro = undefined;
+    this.load();
   }
 
   loadParcelas(): void {
     this.parcelasService.list().subscribe({
       next: (response) => {
         this.parcelas = response;
-        if (this.parcelas.length > 0 && this.model.parcela.id === 0) {
-          this.model.parcela.id = this.parcelas[0].id ?? 0;
+        if (this.parcelas.length > 0 && this.model.parcelaId === 0) {
+          this.model.parcelaId = this.parcelas[0].id ?? 0;
         }
       }
     });
   }
 
   create(): void {
-    if (!this.model.mensaje.trim()) {
-      Swal.fire({ icon: 'warning', title: 'Campo requerido', text: 'Ingresa la descripción de la alerta.', confirmButtonColor: '#059669' });
+    if (!this.model.descripcion.trim()) {
+      this.toastService.warning('Campo requerido', 'Ingresa la descripción de la alerta.');
       return;
     }
 
     this.alertasService.create({
       ...this.model,
-      mensaje: this.model.mensaje.trim()
+      descripcion: this.model.descripcion.trim()
     }).subscribe({
       next: () => {
-        Swal.fire({ icon: 'success', title: 'Alerta registrada', timer: 1500, showConfirmButton: false, timerProgressBar: true });
-        this.model.mensaje = '';
+        this.toastService.success('Alerta registrada');
+        this.model.descripcion = '';
         this.showForm = false;
         this.load();
       },
       error: (err) => {
-        Swal.fire({ icon: 'error', title: 'Error', text: this.httpErrorService.toMessage(err, 'No se pudo registrar la alerta.'), confirmButtonColor: '#059669' });
+        this.toastService.error('Error', this.httpErrorService.toMessage(err, 'No se pudo registrar la alerta.'));
       }
     });
   }
 
   atender(id: number): void {
-    Swal.fire({
-      title: '¿Atender alerta?',
-      text: 'Marcar esta alerta como atendida.',
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonColor: '#059669',
-      cancelButtonColor: '#64748b',
-      confirmButtonText: 'Sí, atender',
-      cancelButtonText: 'Cancelar'
-    }).then(result => {
-      if (result.isConfirmed) {
-        this.alertasService.atender(id).subscribe({
-          next: () => this.load(),
-          error: (err) => Swal.fire({ icon: 'error', title: 'Error', text: this.httpErrorService.toMessage(err, 'No se pudo atender la alerta.') })
-        });
-      }
+    this.alertasService.atender(id).subscribe({
+      next: (updated) => {
+        // Actualizar localmente sin recargar toda la lista
+        const idx = this.alertas.findIndex(a => a.id === id);
+        if (idx !== -1) this.alertas[idx] = updated;
+      },
+      error: () => { this.error = 'No se pudo atender la alerta.'; }
     });
   }
 
   descartar(id: number): void {
-    Swal.fire({
-      title: '¿Descartar alerta?',
-      text: 'Esta alerta será descartada.',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#dc2626',
-      cancelButtonColor: '#64748b',
-      confirmButtonText: 'Sí, descartar',
-      cancelButtonText: 'Cancelar'
-    }).then(result => {
-      if (result.isConfirmed) {
-        this.alertasService.descartar(id).subscribe({
-          next: () => this.load(),
-          error: (err) => Swal.fire({ icon: 'error', title: 'Error', text: this.httpErrorService.toMessage(err, 'No se pudo descartar la alerta.') })
-        });
+    this.alertasService.descartar(id).subscribe({
+      next: (updated) => {
+        // Actualizar localmente sin recargar toda la lista
+        const idx = this.alertas.findIndex(a => a.id === id);
+        if (idx !== -1) this.alertas[idx] = updated;
+      },
+      error: () => { this.error = 'No se pudo descartar la alerta.'; }
+    });
+  }
+
+  delete(id: number): void {
+    this.alertasService.remove(id).subscribe({
+      next: () => this.load(),
+      error: () => {
+        this.error = 'No se pudo eliminar la alerta.';
       }
     });
+  }
+
+  restore(id: number): void {
+    this.alertasService.restore(id).subscribe({
+      next: () => this.load(),
+      error: () => {
+        this.error = 'No se pudo restaurar la alerta.';
+      }
+    });
+  }
+
+  getIconForTipo(tipo: string): string {
+    switch(tipo) {
+      case 'PLAGA': return '🐛';
+      case 'SEQUIA': return '☀️';
+      case 'LLUVIA_INTENSA': return '🌧️';
+      case 'TEMPERATURA': return '🌡️';
+      default: return '⚠️';
+    }
   }
 }

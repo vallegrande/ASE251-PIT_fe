@@ -1,95 +1,97 @@
-.stat-card {
+/* ── Card base ── */
+.card {
   background: var(--bg-card);
-  border-radius: var(--radius-lg);
-  padding: 1.25rem;
-  display: flex;
-  align-items: flex-start;
-  gap: 1rem;
-  border: 1px solid var(--neutral-100);
-  box-shadow: var(--shadow-sm);
-  transition: all var(--transition-base);
-  animation: fadeIn 0.4s ease forwards;
-}
-
-.stat-card:hover {
-  box-shadow: var(--shadow-md);
-  transform: translateY(-2px);
-}
-
-.stat-icon {
-  width: 48px;
-  height: 48px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--text-muted);
   border-radius: var(--radius-md);
+  padding: 1.35rem 1.25rem;
+  transition: transform var(--transition-base),
+              box-shadow var(--transition-base),
+              border-color var(--transition-base);
+  cursor: default;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+  border-color: rgba(52, 211, 153, 0.18);
+  border-left-color: inherit;
+}
+
+/* ── Tone variants — left border accent ── */
+.card--success {
+  border-left-color: var(--success);
+}
+
+.card--danger {
+  border-left-color: var(--danger);
+}
+
+/* ── Header row ── */
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.85rem;
+}
+
+/* ── Icon ── */
+.card-icon {
+  width: 34px;
+  height: 34px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.3rem;
+  border-radius: var(--radius-sm);
+  background: rgba(107, 127, 114, 0.12);
+  color: var(--text-muted);
   flex-shrink: 0;
-  background: var(--primary-50);
-  color: var(--primary-600);
 }
 
-.stat-body {
-  flex: 1;
-  min-width: 0;
+.card-icon.icon--success {
+  background: var(--success-bg);
+  color: var(--success);
 }
 
-.stat-label {
-  margin: 0;
-  color: var(--text-muted);
-  font-size: 0.75rem;
-  font-weight: 500;
+.card-icon.icon--danger {
+  background: var(--danger-bg);
+  color: var(--danger);
+}
+
+/* ── Label ── */
+.card-label {
+  font-size: 0.72rem;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-
-.stat-value {
-  margin: 0.2rem 0 0;
-  color: var(--text-primary);
-  font-size: 1.55rem;
-  font-weight: 800;
-  line-height: 1.2;
-}
-
-.stat-hint {
-  margin: 0.25rem 0 0;
+  letter-spacing: 0.06em;
   color: var(--text-muted);
-  font-size: 0.73rem;
+  line-height: 1.3;
 }
 
-/* Tones */
-.tone-success .stat-icon {
-  background: var(--success-100);
-  color: #166534;
+/* ── Value ── */
+.card-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.2;
+  margin-bottom: 0.25rem;
+  letter-spacing: -0.02em;
 }
 
-.tone-danger .stat-icon {
-  background: var(--danger-100);
-  color: var(--danger-600);
+.card--success .card-value {
+  color: var(--success);
 }
 
-.tone-warning .stat-icon {
-  background: var(--warning-100);
-  color: var(--warning-600);
+.card--danger .card-value {
+  color: var(--danger);
 }
 
-.tone-info .stat-icon {
-  background: var(--info-100);
-  color: var(--info-500);
-}
-
-@media (max-width: 480px) {
-  .stat-card {
-    padding: 1rem;
-  }
-
-  .stat-icon {
-    width: 40px;
-    height: 40px;
-    font-size: 1.1rem;
-  }
-
-  .stat-value {
-    font-size: 1.3rem;
-  }
+/* ── Hint ── */
+.card-hint {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-top: 0.35rem;
+  line-height: 1.4;
 }

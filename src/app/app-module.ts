@@ -1,7 +1,8 @@
 import { NgModule, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 import { AppRoutingModule } from './app-routing-module';
 import { App } from './app';
@@ -53,7 +54,7 @@ import { MonitoreoTableComponent } from './features/monitoreo/components/monitor
   ],
   imports: [
     BrowserModule,
-    HttpClientModule,
+    CommonModule,
     FormsModule,
     CoreModule,
     SharedModule,
@@ -61,6 +62,7 @@ import { MonitoreoTableComponent } from './features/monitoreo/components/monitor
   ],
   providers: [
     provideBrowserGlobalErrorListeners(),
+    provideHttpClient(withInterceptorsFromDi()),
   ],
   bootstrap: [App]
 })

@@ -1,49 +1,104 @@
-<section class="metrics-grid" *ngIf="summary">
-  <app-stat-card
-    label="Total Parcelas"
-    [value]="summary.totalParcelas"
-    icon="bi-map-fill"
-    tone="info"
-    hint="Parcelas registradas"
-  ></app-stat-card>
+<div class="metrics-grid" *ngIf="summary">
 
-  <app-stat-card
-    label="Parcelas Activas"
-    [value]="summary.parcelasActivas"
-    icon="bi-check-circle-fill"
-    tone="success"
-    hint="En producción"
-  ></app-stat-card>
+  <!-- Total parcelas -->
+  <div class="metric-card">
+    <div class="metric-icon metric-icon--default">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor" stroke-width="2"
+           stroke-linecap="round" stroke-linejoin="round">
+        <polygon points="12 2 2 7 12 12 22 7 12 2"/>
+        <polyline points="2 17 12 22 22 17"/>
+        <polyline points="2 12 12 17 22 12"/>
+      </svg>
+    </div>
+    <div class="metric-body">
+      <span class="metric-label">Total de parcelas</span>
+      <span class="metric-value">{{ summary!.totalParcelas }}</span>
+    </div>
+  </div>
 
-  <app-stat-card
-    label="Parcelas en Riesgo"
-    [value]="summary.parcelasEnRiesgo"
-    icon="bi-exclamation-triangle-fill"
-    tone="warning"
-    hint="Requieren atención"
-  ></app-stat-card>
+  <!-- Parcelas activas -->
+  <div class="metric-card metric-card--success">
+    <div class="metric-icon metric-icon--success">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor" stroke-width="2"
+           stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20 6 9 17 4 12"/>
+      </svg>
+    </div>
+    <div class="metric-body">
+      <span class="metric-label">Parcelas activas</span>
+      <span class="metric-value metric-value--success">{{ summary!.parcelasActivas }}</span>
+    </div>
+  </div>
 
-  <app-stat-card
-    label="Área Total (ha)"
-    [value]="summary.areaTotalHectareas"
-    icon="bi-rulers"
-    tone="info"
-    hint="Hectáreas totales"
-  ></app-stat-card>
+  <!-- Parcelas en riesgo -->
+  <div class="metric-card metric-card--warning">
+    <div class="metric-icon metric-icon--warning">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor" stroke-width="2"
+           stroke-linecap="round" stroke-linejoin="round">
+        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+        <line x1="12" y1="9" x2="12" y2="13"/>
+        <line x1="12" y1="17" x2="12.01" y2="17"/>
+      </svg>
+    </div>
+    <div class="metric-body">
+      <span class="metric-label">En riesgo</span>
+      <span class="metric-value metric-value--warning">{{ summary!.parcelasEnRiesgo }}</span>
+    </div>
+  </div>
 
-  <app-stat-card
-    label="Alertas Pendientes"
-    [value]="summary.alertasPendientes"
-    icon="bi-bell-fill"
-    tone="warning"
-    hint="Sin atender"
-  ></app-stat-card>
+  <!-- Área total -->
+  <div class="metric-card">
+    <div class="metric-icon metric-icon--info">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor" stroke-width="2"
+           stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+        <polyline points="9 22 9 12 15 12 15 22"/>
+      </svg>
+    </div>
+    <div class="metric-body">
+      <span class="metric-label">Área activa</span>
+      <span class="metric-value">
+        {{ (summary!.areaTotalHectareas | number:'1.0-2') || '0' }}
+        <small>ha</small>
+      </span>
+    </div>
+  </div>
 
-  <app-stat-card
-    label="Alertas Críticas"
-    [value]="summary.alertasCriticas"
-    icon="bi-shield-exclamation"
-    tone="danger"
-    hint="Nivel crítico"
-  ></app-stat-card>
-</section>
+  <!-- Alertas pendientes -->
+  <div class="metric-card metric-card--danger">
+    <div class="metric-icon metric-icon--danger">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor" stroke-width="2"
+           stroke-linecap="round" stroke-linejoin="round">
+        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+      </svg>
+    </div>
+    <div class="metric-body">
+      <span class="metric-label">Alertas pendientes</span>
+      <span class="metric-value metric-value--danger">{{ summary!.alertasPendientes }}</span>
+    </div>
+  </div>
+
+  <!-- Alertas críticas -->
+  <div class="metric-card metric-card--danger">
+    <div class="metric-icon metric-icon--danger">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor" stroke-width="2"
+           stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/>
+        <line x1="12" y1="8" x2="12" y2="12"/>
+        <line x1="12" y1="16" x2="12.01" y2="16"/>
+      </svg>
+    </div>
+    <div class="metric-body">
+      <span class="metric-label">Alertas críticas</span>
+      <span class="metric-value metric-value--danger">{{ summary!.alertasCriticas }}</span>
+    </div>
+  </div>
+
+</div>
